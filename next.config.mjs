@@ -18,7 +18,7 @@ const nextConfig = {
             value: 'geolocation=(), camera=(), microphone=(self)',
           },
         ],
-      },
+      }
     ]
   },
   env: {
