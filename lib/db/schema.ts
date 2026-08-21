@@ -1,98 +1,51 @@
-import {
-  pgTable,
-  text,
-  timestamp,
-  boolean,
-  serial,
-  integer,
-  real,
-} from 'drizzle-orm/pg-core'
+import { pgTable, text, integer, timestamp, jsonb, boolean, primaryKey } from 'drizzle-orm/pg-core'
 
-// --- Better Auth required tables -------------------------------------------
-// Column names are camelCase to match Better Auth's defaults. Do not rename.
-
-export const user = pgTable('user', {
+export const quizzes = pgTable('quizzes', {
   id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: boolean('emailVerified').notNull().default(false),
-  image: text('image'),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+  userId: text('user_id').notNull(),
+  title: text('title').notNull(),
+  questions: jsonb('questions').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
-export const session = pgTable('session', {
+export const quizAttempts = pgTable('quiz_attempts', {
   id: text('id').primaryKey(),
-  expiresAt: timestamp('expiresAt').notNull(),
-  token: text('token').notNull().unique(),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
-  ipAddress: text('ipAddress'),
-  userAgent: text('userAgent'),
-  userId: text('userId')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
+  userId: text('user_id').notNull(),
+  quizId: text('quiz_id').notNull(),
+  currentQuestion: integer('current_question').default(0).notNull(),
+  answers: jsonb('answers').default({}).notNull(),
+  completed: boolean('completed').default(false).notNull(),
+  startedAt: timestamp('started_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
-export const account = pgTable('account', {
+export const devRequests = pgTable('dev_requests', {
   id: text('id').primaryKey(),
-  accountId: text('accountId').notNull(),
-  providerId: text('providerId').notNull(),
-  userId: text('userId')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  accessToken: text('accessToken'),
-  refreshToken: text('refreshToken'),
-  idToken: text('idToken'),
-  accessTokenExpiresAt: timestamp('accessTokenExpiresAt'),
-  refreshTokenExpiresAt: timestamp('refreshTokenExpiresAt'),
-  scope: text('scope'),
-  password: text('password'),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+  userId: text('user_id').notNull(),
+  prompt: text('prompt').notNull(),
+  status: text('status').default('queued').notNull(),
+  result: text('result'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
-export const verification = pgTable('verification', {
-  id: text('id').primaryKey(),
-  identifier: text('identifier').notNull(),
-  value: text('value').notNull(),
-  expiresAt: timestamp('expiresAt').notNull(),
-  createdAt: timestamp('createdAt').defaultNow(),
-  updatedAt: timestamp('updatedAt').defaultNow(),
+export type QuizQuestion = { id: string; text: string; options: string[]; answer?: string; hours: number; minutes: number; seconds: number }
+export const antiCheatGlobalConfig = pgTable('anti_cheat_global_config', {
+  id: boolean('id').primaryKey().default(true).notNull(), enabled: boolean('enabled').default(false).notNull(), config: jsonb('config').default({}).notNull(), updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
-// --- Student management tables ---------------------------------------------
-// Every table is scoped by `userId` (the signed-in admin/teacher). There is no
-// RLS on Neon, so every query filters by userId. No FK constraints on app
-// tables by design.
+export const antiCheatItemConfigs = pgTable('anti_cheat_item_configs', {
+  itemId: text('item_id').notNull(), itemType: text('item_type').notNull(), enabled: boolean('enabled').default(false).notNull(), isOverride: boolean('is_override').default(true).notNull(), config: jsonb('config').default({}).notNull(), createdAt: timestamp('created_at').defaultNow().notNull(), updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => [primaryKey({ columns: [table.itemId, table.itemType] })])
 
-export const students = pgTable('students', {
-  id: serial('id').primaryKey(),
-  userId: text('userId').notNull(),
-  name: text('name').notNull(),
-  email: text('email'),
-  studentNumber: text('studentNumber').notNull(),
-  phone: text('phone'),
-  gradeLevel: text('gradeLevel'),
-  status: text('status').notNull().default('active'), // active | inactive
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
+export const antiCheatSessions = pgTable('anti_cheat_sessions', {
+  id: text('id').primaryKey(), studentId: text('student_id').notNull(), itemId: text('item_id').notNull(), itemType: text('item_type').notNull(), status: text('status').default('active').notNull(), riskScore: integer('risk_score').default(0).notNull(), severity: text('severity').default('NORMAL').notNull(), currentQuestion: integer('current_question'), attemptId: text('attempt_id'), startedAt: timestamp('started_at').defaultNow().notNull(), endedAt: timestamp('ended_at'), updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
-export const courses = pgTable('courses', {
-  id: serial('id').primaryKey(),
-  userId: text('userId').notNull(),
-  name: text('name').notNull(),
-  code: text('code').notNull(),
-  instructor: text('instructor'),
-  credits: integer('credits').notNull().default(3),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
+export const antiCheatEvents = pgTable('anti_cheat_events', {
+  id: text('id').primaryKey(), sessionId: text('session_id').notNull(), studentId: text('student_id').notNull(), itemId: text('item_id').notNull(), itemType: text('item_type').notNull(), eventType: text('event_type').notNull(), severity: text('severity').notNull(), decision: text('decision').notNull(), riskScore: integer('risk_score').notNull(), riskDelta: integer('risk_delta').default(0).notNull(), reason: text('reason').default('').notNull(), durationMs: integer('duration_ms').default(0).notNull(), timestamp: timestamp('timestamp').defaultNow().notNull(), metadata: jsonb('metadata').default({}).notNull(),
 })
 
-export const enrollments = pgTable('enrollments', {
-  id: serial('id').primaryKey(),
-  userId: text('userId').notNull(),
-  studentId: integer('studentId').notNull(),
-  courseId: integer('courseId').notNull(),
-  score: real('score'), // 0 - 100, null = not graded yet
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-})
+export type AntiCheatItemType = 'recitation' | 'exam' | 'task'
+
+export type QuizData = { id: string; title: string; questions: QuizQuestion[] }
