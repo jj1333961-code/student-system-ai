@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#315c4b">
+<meta name="description" content="ثمار — منصة القرآن والتعليم">
+<title>ثمار | منصة القرآن والتعليم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="/app.html" as="document" fetchpriority="high">
+<link rel="stylesheet" href="https://www.fontstatic.com/f=diwanltr">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{--green:#1d5038;--gold:#bf994a}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Segoe UI',Tahoma,sans-serif}body{min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:24px;background:radial-gradient(circle at 50% 15%,rgba(191,153,74,.14),transparent 34%),linear-gradient(145deg,#f8fcf8 0%,#e7f1e8 100%);color:var(--green)}body:before,body:after{content:'';position:fixed;width:240px;height:240px;border:1px solid rgba(191,153,74,.22);transform:rotate(45deg);pointer-events:none}body:before{top:-100px;right:-100px;box-shadow:0 0 0 18px rgba(45,112,76,.035),0 0 0 36px rgba(191,153,74,.035)}body:after{bottom:-110px;left:-110px;box-shadow:0 0 0 18px rgba(45,112,76,.035),0 0 0 36px rgba(191,153,74,.035)}main{width:min(760px,100%);text-align:center;padding:clamp(28px,6vw,68px) clamp(20px,6vw,72px);border:1px solid rgba(45,112,76,.18);border-radius:32px;background:rgba(255,255,255,.72);box-shadow:0 28px 80px rgba(35,88,54,.14);backdrop-filter:blur(12px);position:relative}h1{margin:0;color:var(--green);font-family:'diwanltr','Diwani Letter','Traditional Arabic',serif;font-size:clamp(2.8rem,9vw,6rem);font-weight:900;letter-spacing:-.08em;line-height:1.1;text-shadow:0 2px 0 rgba(191,153,74,.25),0 10px 26px rgba(45,112,76,.13)}.subtitle{margin:12px 0 26px;color:#587264;font-size:clamp(1.1rem,3vw,1.55rem);font-weight:700}.ayah{margin:0 auto 24px;max-width:650px;color:#254d3a;font-family:'Amiri','Traditional Arabic','Segoe UI',serif;font-size:clamp(1.45rem,4vw,2.45rem);line-height:2.05;text-shadow:0 0 18px rgba(191,153,74,.26)}.ayah:before,.ayah:after{content:'۞';color:var(--gold);font-family:serif;font-size:.8em;margin-inline:12px}.description{margin:0 auto 26px;color:#6a7f73;font-size:clamp(.95rem,2vw,1.15rem)}.intention{margin:0 0 8px;color:#799084;font-size:.9rem}.prayer{margin:0 0 24px;color:#a17735;font-size:1rem;font-weight:700}.status{margin:0;color:#72887b;font-size:.9rem}.fallback{margin-top:16px;border:0;border-radius:12px;padding:12px 20px;background:#315c4b;color:#fff;font-weight:700;cursor:pointer}.fallback[hidden]{display:none}@media(max-width:520px){body{padding:14px}main{border-radius:24px}.ayah:before,.ayah:after{margin-inline:4px}}
+</style>
+</head>
+<body>
+<main aria-live="polite">
+<h1>ثمار</h1>
+<p class="subtitle">منصة ثمار ترحب بكم</p>
+<p class="ayah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ<br>أَلَمْ تَرَ كَيْفَ ضَرَبَ اللَّهُ مَثَلًا كَلِمَةً طَيِّبَةً كَشَجَرَةٍ طَيِّبَةٍ أَصْلُهَا ثَابِتٌ وَفَرْعُهَا فِي السَّمَاءِ</p>
+<p class="description">منصة كاملة لطالب القرآن</p>
+<p class="intention">هذا العمل ابتغاء وجه الله تعالى</p>
+<p class="prayer">صَلِّ على النبي ﷺ</p>
+<p id="status" class="status">اضغط للدخول إلى المنصة، ثم استمع إلى التلاوة.</p>
+<button id="enterPlatform" class="fallback" type="button">الدخول إلى المنصة</button>
+<audio id="welcomeAudio" preload="auto" playsinline src="/audio/ibrahim-ayah-24-minshawi.mp3"></audio>
+</main>
+<script>
+(function(){
+  const audio=document.getElementById('welcomeAudio');
+  const status=document.getElementById('status');
+  const enterButton=document.getElementById('enterPlatform');
+  let moving=false;
+  let started=false;
+
+  // الصفحة الرئيسية وملف النظام يُجلبان من البداية ويُحفظان في ذاكرة المتصفح.
+  // لا يبدأ تنفيذ النظام الكامل هنا، لذلك تبقى صفحة الترحيب خفيفة.
+  function warmMainPage(){
+    const requests=[
+      fetch('/app.html',{cache:'force-cache',credentials:'same-origin'})
+    ];
+    Promise.allSettled(requests).then(function(){
+      if(!started) status.textContent='المنصة جاهزة. اضغط للدخول والاستماع إلى التلاوة.';
+    });
+  }
+  warmMainPage();
+
+  function enterApp(){
+    if(moving) return;
+    moving=true;
+    status.textContent='جاري الدخول إلى المنصة...';
+    location.replace('/app.html');
+  }
+
+  audio.addEventListener('ended', enterApp, {once:true});
+  audio.addEventListener('error', function(){
+    status.textContent='تعذر تشغيل التلاوة، جاري الدخول إلى المنصة...';
+    setTimeout(enterApp,300);
+  }, {once:true});
+
+  enterButton.addEventListener('click', function(){
+    if(started) return;
+    started=true;
+    enterButton.disabled=true;
+    enterButton.textContent='جاري تشغيل التلاوة...';
+    status.textContent='جاري تشغيل تلاوة الشيخ المنشاوي...';
+    // أثناء التلاوة نُحضّر منطق التطبيق في الخلفية، فتكون المنصة جاهزة غالباً عند انتهاء الصوت.
+    fetch('/app-core.js',{cache:'force-cache',credentials:'same-origin'}).catch(function(){});
+    const playPromise=audio.play();
+    if(playPromise && playPromise.catch){
+      playPromise.catch(function(){
+        started=false;
+        enterButton.disabled=false;
+        enterButton.textContent='الدخول إلى المنصة';
+        status.textContent='تعذر تشغيل التلاوة. اضغط مرة أخرى للمحاولة.';
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>
