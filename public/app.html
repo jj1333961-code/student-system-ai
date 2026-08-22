@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#315c4b">
+<meta name="description" content="ثمار — منصة قرآنية هادئة للتسميع والاختبارات والمهام والنمو العلمي.">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<link rel="stylesheet" href="https://www.fontstatic.com/f=diwanltr">
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<title>ثمار | منصة القرآن والتعليم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<!-- الخدمات الثقيلة تُحمّل خارج مسار العرض الأول، وتُستدعى عند الحاجة فقط -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+/* 🔐 تشغيل آمن على أي استضافة HTTPS (Netlify / Vercel / GitHub Pages) */
+(function(){
+  try {
+    if (location.protocol === 'http:' &&
+        location.hostname !== 'localhost' &&
+        location.hostname !== '127.0.0.1' &&
+        !/^\[?::1\]?$/.test(location.hostname) &&
+        !location.hostname.endsWith('.local')) {
+      location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+    }
+  } catch(e) {}
+
+  window.isMicAvailable = function(){
+    return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) &&
+           (window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+  };
+
+  /* بديل موحّد وآمن لطلب الميكروفون مع رسائل عربية واضحة */
+  window.safeGetMic = async function(constraints){
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (location.protocol === 'file:') {
+        alert('⚠️ لا يمكن تشغيل الميكروفون عند فتح الملف مباشرة من الجهاز (file://).\nارفع الملف على استضافة HTTPS مثل Netlify أو افتحه عبر الرابط المنشور.');
+      } else if (!window.isSecureContext) {
+        alert('⚠️ الميكروفون يحتاج اتصالاً آمناً (HTTPS). افتح الموقع عبر رابط https.');
+      } else {
+        alert('⚠️ متصفحك لا يدعم تسجيل الصوت. جرّب Chrome أو Safari المحدّث.');
+      }
+      throw new Error('mic-unavailable');
+    }
+    try {
+      return await navigator.mediaDevices.getUserMedia(constraints || { audio: true });
+    } catch (err) {
+      var name = (err && err.name) || '';
+      if (name === 'NotAllowedError' || name === 'SecurityError') {
+        alert('🚫 تم رفض إذن الميكروفون.\nاضغط على أيقونة القفل 🔒 في شريط العنوان ثم اسمح بالميكروفون وأعد المحاولة.');
+      } else if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
+        alert('🎤 لم يتم العثور على ميكروفون متصل بالجهاز.');
+      } else if (name === 'NotReadableError') {
+        alert('🎤 الميكروفون مستخدم من تطبيق آخر. أغلق التطبيقات الأخرى وحاول مرة أخرى.');
+      } else {
+        alert('⚠️ تعذر تشغيل الميكروفون: ' + (err && err.message ? err.message : name));
+      }
+      throw err;
+    }
+  };
+})();
+</script>
+<style>
+/* الخطوط الخارجية غير حرجة: الخط النظامي يظهر فورًا، ثم تُحسّن الخطوط العربية العرض لاحقًا. */
+:root {
+  --bg: linear-gradient(135deg, #eaf1e8 0%, #d7e7dc 100%);
+  --card-bg: #fffdf7; --text: #263c34; --text-light: #6c7d74; --border: #d7e1d8;
+  --primary: #315c4b; --primary-hover: #244738; --success: #4d7b5e;
+  --danger: #b54f4f; --warning: #b98535; --info: #4e7b83; --secondary: #74837b;
+  --input-bg: #fffdf7; --table-header: #f2f6ef; --table-hover: #f5f8f3;
+  --shadow: 0 16px 40px rgba(39,76,59,0.12);
+  --chart-bg: #fff; --chart-grid: #e0e0e0; --chart-text: #333;
+}
+[data-theme="dark"] {
+  --bg: linear-gradient(135deg, #13271f 0%, #1b3930 100%);
+  --card-bg: #1e3028; --text: #edf4ec; --text-light: #b4c5ba; --border: #355143;
+  --primary: #d3aa5b; --primary-hover: #e1bd73; --input-bg: #20382f;
+  --table-header: #254238; --table-hover: #29493d;
+  --shadow: 0 16px 40px rgba(0,0,0,0.28);
+  --chart-bg: #1e1e2f; --chart-grid: #333; --chart-text: #e0e0e0;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,sans-serif; }
+body { background: var(--bg); min-height:100vh; color: var(--text); transition:background .3s ease, color .3s ease; }
+body::before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.28; background-image:radial-gradient(circle at 12% 18%, rgba(49,92,75,.16) 0 1px, transparent 1px), radial-gradient(circle at 84% 74%, rgba(185,133,53,.13) 0 1px, transparent 1px); background-size:32px 32px, 44px 44px; }
+button, .card, .page, input, select, textarea { transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease; }
+button:hover, .card:hover { transform:translateY(-2px); }
+button:active { transform:scale(.98); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+.container { max-width:1400px; margin:0 auto; padding:20px; padding-bottom:100px; }
+  .hidden { display:none !important; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+ .display-controls {
+  position:fixed; top:20px; left:20px; z-index:1000;
+  display:flex; align-items:center; gap:10px;
+  }
+ .theme-toggle,.lang-toggle {
+  position:static; flex:0 0 50px;
+  background:var(--card-bg); border:2px solid var(--primary); color:var(--primary);
+  width:50px; height:50px; min-width:50px; min-height:50px; padding:0; border-radius:50%; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);
+  }
+ .theme-toggle { font-size:1.3rem; }
+ .lang-toggle { font-size:0.95rem; font-weight:700; }
+.home-page { text-align:center; padding-top:60px; }
+.home-page h1 { color:#fff; font-size:2.5rem; margin-bottom:10px; text-shadow:0 2px 10px rgba(0,0,0,0.3); }
+.home-page p { color:rgba(255,255,255,0.9); font-size:1.2rem; margin-bottom:40px; }
+.cards { display:flex; gap:25px; justify-content:center; flex-wrap:wrap; }
+.card {
+  background: var(--card-bg); border-radius:20px; padding:40px 30px; width:280px;
+  box-shadow: var(--shadow); cursor:pointer; transition:0.3s;
+  text-decoration:none; color: var(--text); text-align:center;
+}
+.card:hover { transform:translateY(-10px); box-shadow:0 25px 50px rgba(0,0,0,0.3); }
+.card .icon { font-size:4rem; margin-bottom:15px; }
+.card h3 { font-size:1.5rem; color: var(--primary); margin-bottom:8px; }
+.card p { color: var(--text-light); font-size:0.95rem; }
+.page { background: color-mix(in srgb, var(--card-bg) 94%, transparent); border:1px solid var(--border); border-radius:22px; padding:30px; margin-top:20px; box-shadow:var(--shadow); position:relative; }
+#lockScreen { margin-top: clamp(28px, 9vh, 90px) !important; padding:clamp(24px, 4vw, 42px); }
+#lockScreen .page-header { align-items:flex-start; }
+#lockScreen .page-header h2 { font-size:clamp(1.35rem, 3vw, 1.8rem); letter-spacing:-.02em; }
+#lockScreen::before { content:'ثمار'; display:block; color:var(--primary); font-size:clamp(2rem, 6vw, 3.2rem); font-weight:800; letter-spacing:.04em; margin-bottom:8px; }
+#lockScreen::after { content:'تعلمٌ هادئ، ونموٌ ثابت'; display:block; color:var(--text-light); font-size:.92rem; margin-top:-20px; margin-bottom:22px; }
+.page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; border-bottom:2px solid var(--border); padding-bottom:15px; flex-wrap:wrap; gap:10px; }
+.page-header h2 { color: var(--primary); }
+.btn { padding:10px 22px; border:none; border-radius:10px; cursor:pointer; font-size:1rem; transition:0.2s; }
+.btn-primary { background: var(--primary); color:#fff; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-success { background: var(--success); color:#fff; }
+.btn-danger { background: var(--danger); color:#fff; }
+.btn-warning { background: var(--warning); color:#000; }
+.btn-info { background: var(--info); color:#fff; }
+.btn-secondary { background: var(--secondary); color:#fff; }
+.btn-outline { background:transparent; border:2px solid var(--primary); color: var(--primary); }
+.btn-sm { padding:6px 14px; font-size:0.85rem; }
+.btn-xs { padding:4px 10px; font-size:0.75rem; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; margin-bottom:6px; font-weight:600; color: var(--text-light); }
+.form-group input, .form-group select, .form-group textarea {
+  width:100%; padding:12px 15px; border:2px solid var(--border); border-radius:10px; font-size:1rem; transition:0.2s; background: var(--input-bg); color: var(--text);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); outline:none; }
+.form-row { display:flex; gap:15px; flex-wrap:wrap; }
+.form-row .form-group { flex:1; min-width:200px; }
+.alert { padding:12px 18px; border-radius:10px; margin-bottom:15px; }
+.alert-success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+.alert-danger { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+.alert-info { background:#d1ecf1; color:#0c5460; border:1px solid #bee5eb; }
+.alert-warning { background:#fff3cd; color:#856404; border:1px solid #ffeeba; }
+table { width:100%; border-collapse:collapse; margin-top:15px; color: var(--text); }
+th, td { padding:12px; text-align:right; border-bottom:1px solid var(--border); }
+th { background: var(--table-header); font-weight:700; color: var(--primary); }
+tr:hover { background: var(--table-hover); }
+.stats { display:flex; gap:20px; margin-bottom:25px; flex-wrap:wrap; }
+.stat-box { background:linear-gradient(135deg, #667eea, #764ba2); color:#fff; padding:25px; border-radius:15px; flex:1; min-width:180px; text-align:center; }
+.stat-box .num { font-size:2.2rem; font-weight:bold; }
+.stat-box .label { opacity:0.9; margin-top:5px; }
+.stat-box[onclick] { cursor:pointer; transition:0.2s; }
+.stat-box[onclick]:hover { transform:translateY(-5px); box-shadow:0 5px 15px rgba(0,0,0,0.3); }
+.stat-action { margin-top:14px; width:100%; padding:9px 12px; border:1px solid rgba(255,255,255,0.55); border-radius:10px; background:rgba(255,255,255,0.16); color:#fff; font-size:0.9rem; font-weight:600; cursor:pointer; transition:0.2s; }
+.stat-action:hover { background:rgba(255,255,255,0.3); }
+.menu-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:15px; margin-bottom:25px; }
+.menu-btn { padding:20px; border-radius:15px; text-align:center; color:#fff; font-size:1.1rem; font-weight:600; cursor:pointer; transition:0.2s; border:none; }
+.menu-btn:hover { transform:scale(1.03); }
+.badge { padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:600; }
+.badge-primary { background: var(--primary); color:#fff; }
+.badge-success { background: var(--success); color:#fff; }
+.badge-warning { background: var(--warning); color:#000; }
+.badge-danger { background: var(--danger); color:#fff; }
+.search-box { margin-bottom:15px; }
+.search-box input { width:100%; padding:12px 20px; border:2px solid var(--border); border-radius:12px; font-size:1rem; background: var(--input-bg); color: var(--text); }
+.msg-item { padding:15px; border-radius:12px; margin-bottom:10px; background: var(--table-header); border-right:4px solid var(--primary); }
+.msg-item .sender { font-weight:700; color: var(--primary); }
+.msg-item .time { color: var(--text-light); font-size:0.85rem; }
+.msg-reply { margin-top:10px; padding:10px; background:#d4edda; border-radius:8px; color:#155724; }
+.file-upload { border:2px dashed var(--primary); border-radius:12px; padding:15px; text-align:center; cursor:pointer; transition:0.2s; background: var(--input-bg); margin-top:8px; }
+.file-upload:hover { background:rgba(102,126,234,0.1); }
+.subjects-select { min-height:120px; }
+.subjects-select option { padding:8px; }
+.msg-tabs { display:flex; gap:10px; margin-bottom:20px; border-bottom:2px solid var(--border); }
+.msg-tab { padding:12px 25px; cursor:pointer; border-bottom:3px solid transparent; font-weight:600; transition:0.2s; }
+.msg-tab.active { border-bottom-color: var(--primary); color: var(--primary); }
+.msg-tab:hover { background:rgba(102,126,234,0.05); }
+.approval-btns { display:flex; gap:8px; margin-top:8px; }
+.approval-btns button { padding:6px 14px; border-radius:8px; border:none; cursor:pointer; font-size:0.85rem; }
+.btn-approve { background:var(--success); color:#fff; }
+.btn-reject { background:var(--danger); color:#fff; }
+.homework-section { background:linear-gradient(135deg, rgba(40,167,69,0.1), rgba(32,201,151,0.1)); border:2px solid var(--success); border-radius:15px; padding:20px; margin:15px 0; }
+.reading-section { background:linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,152,0,0.1)); border:2px solid var(--warning); border-radius:15px; padding:20px; margin:15px 0; }
+.add-item-btn { background:var(--success); color:#fff; border:none; border-radius:50%; width:30px; height:30px; font-size:1.2rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; margin-right:8px; }
+.add-item-btn:hover { transform:scale(1.1); }
+.welcome-msg { background:linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15)); border-radius:15px; padding:20px; margin-bottom:20px; border-right:4px solid var(--primary); }
+.welcome-msg h4 { color:var(--primary); margin-bottom:10px; }
+.task-card { background:var(--table-header); border-radius:12px; padding:15px; margin-bottom:12px; border-right:4px solid var(--info); }
+.task-card h5 { color:var(--info); margin-bottom:8px; }
+.task-status { display:inline-block; padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:600; margin-top:8px; }
+
+.record-element {
+  background: var(--table-header);
+  border: 2px solid var(--border);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: 0.3s;
+}
+.record-element:hover { border-color: var(--primary); box-shadow: 0 5px 15px rgba(102,126,234,0.15); }
+.record-element-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+.record-element-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+.record-options { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px; }
+.record-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  background: var(--input-bg);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.record-option:hover { border-color: var(--primary); }
+.record-option input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+.record-option label { cursor: pointer; font-weight: 600; margin: 0; }
+.ayah-inputs { display: flex; gap: 15px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.ayah-inputs .form-group { flex: 0 0 auto; min-width: 120px; margin-bottom: 0; }
+.ayah-inputs .form-group input { text-align: center; font-weight: bold; font-size: 1.1rem; }
+.ayah-inputs span { font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+.rating-options { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.rating-option {
+  padding: 8px 20px;
+  border: 2px solid var(--border);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 600;
+  background: var(--input-bg);
+}
+.rating-option:hover { border-color: var(--primary); transform: scale(1.05); }
+.rating-option.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+.rating-excellent { border-color: var(--success); color: var(--success); }
+.rating-verygood { border-color: var(--info); color: var(--info); }
+.rating-good { border-color: var(--warning); color: var(--warning); }
+.rating-repeat { border-color: var(--danger); color: var(--danger); }
+.rating-option.selected.rating-excellent { background: var(--success); color: #fff; }
+.rating-option.selected.rating-verygood { background: var(--info); color: #fff; }
+.rating-option.selected.rating-good { background: var(--warning); color: #000; }
+.rating-option.selected.rating-repeat { background: var(--danger); color: #fff; }
+
+.color-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
+.color-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent;
+  cursor: pointer; transition: 0.2s;
+}
+.color-btn:hover { transform: scale(1.15); }
+.color-btn.selected { border-color: #333; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333; }
+
+.chart-page {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 20px;
+  box-shadow: var(--shadow);
+  min-height: 80vh;
+}
+.history-day {
+  background: var(--card-bg);
+  border: 2px solid var(--primary);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.history-day-header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.history-element {
+  background: var(--table-header);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-right: 4px solid var(--info);
+}
+.history-element-name { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+.history-element-details { margin-top: 8px; display: flex; gap: 20px; flex-wrap: wrap; }
+.history-detail { display: flex; align-items: center; gap: 5px; }
+
+.teacher-admin-badge {
+  display: inline-block;
+  background: var(--warning);
+  color: #000;
+  padding: 2px 10px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+  .voice-record-btn { background:var(--danger); color:#fff; border:none; border-radius:50%; width:60px; height:60px; font-size:1.5rem; cursor:pointer; transition:0.2s; }
+  #studentSpeechBtn[aria-pressed="true"] { animation:pulse 1.2s infinite; border-color:var(--danger); color:var(--danger); }
+.voice-record-btn:hover { transform:scale(1.1); }
+.voice-record-btn.recording { animation: pulse 1s infinite; background:#dc3545; }
+@keyframes pulse { 0% { transform:scale(1); } 50% { transform:scale(1.1); } 100% { transform:scale(1); } }
+
+.admin-badge { position:relative; }
+.msg-count { position:absolute; top:-8px; right:-8px; background:var(--danger); color:#fff; border-radius:50%; width:22px; height:22px; font-size:0.75rem; display:flex; align-items:center; justify-content:center; font-weight:bold; }
+
+.score-badge { background:linear-gradient(135deg, #667eea, #764ba2); color:#fff; padding:8px 20px; border-radius:20px; font-size:1.3rem; font-weight:bold; display:inline-block; margin:5px; }
+
+.draft-badge { background: var(--warning); color: #000; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-right: 5px; }
+.draft-section { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.15)); border: 2px solid var(--warning); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+
+/* Back Button Fixed at Bottom */
+.back-btn-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.back-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.back-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(102,126,234,0.5);
+}
+.back-btn:active {
+  transform: translateY(0);
+}
+
+/* Task Rejected Alert */
+.task-rejected-alert {
+  background: linear-gradient(135deg, rgba(220,53,69,0.1), rgba(220,53,69,0.2));
+  border: 2px solid var(--danger);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  color: var(--danger);
+  font-weight: 600;
+  text-align: center;
+  animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Task Pending Box */
+.task-pending-box {
+  background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,152,0,0.1));
+  border: 2px solid var(--warning);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* File Upload Disabled State */
+.file-upload-disabled {
+  background: var(--table-header) !important;
+  border-color: var(--border) !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+@media(max-width:768px){
+  .cards { flex-direction:column; align-items:center; }
+  .card { width:90%; }
+  .stats { flex-direction:column; }
+  .display-controls { top:10px; left:10px; gap:8px; }
+ .theme-toggle,.lang-toggle { flex-basis:40px; width:40px; height:40px; min-width:40px; min-height:40px; }
+ .theme-toggle { font-size:1rem; }
+ .lang-toggle { font-size:0.8rem; }
+  .form-row { flex-direction:column; }
+  .form-row .form-group { min-width:100%; }
+  .record-options { flex-direction: column; }
+  .ayah-inputs { flex-direction: column; align-items: stretch; }
+  .back-btn { padding: 12px 25px; font-size: 1rem; }
+}
+
+/* AI Chat Styles */
+.ai-chat { display: flex; flex-direction: column; height: 500px; border: 2px solid var(--border); border-radius: 15px; overflow: hidden; background: var(--card-bg); }
+.ai-chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+ .ai-input { display: flex; gap: 10px; padding: 15px; border-top: 2px solid var(--border); background: var(--input-bg); flex-wrap: wrap; }
+ .ai-input input { flex: 1; min-width: 180px; padding: 12px 15px; border: 2px solid var(--border); border-radius: 10px; font-size: 1rem; background: var(--card-bg); color: var(--text); }
+ .ai-model-picker { min-width: 150px; padding: 10px 12px; border: 2px solid var(--border); border-radius: 10px; background: var(--card-bg); color: var(--text); font-size: 0.95rem; }
+.ai-msg { padding: 12px 16px; border-radius: 15px; max-width: 80%; word-wrap: break-word; line-height: 1.5; }
+.ai-msg.user { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+.ai-msg.bot { align-self: flex-start; background: var(--table-header); color: var(--text); border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+
+/* Session Card */
+.session-card { background: var(--table-header); border-radius: 12px; padding: 15px; margin-bottom: 12px; border-right: 4px solid var(--primary); }
+.session-card h5 { color: var(--primary); margin-bottom: 8px; }
+.draft-card { border-right-color: var(--warning); background: linear-gradient(135deg, rgba(255,193,7,0.05), rgba(255,152,0,0.05)); }
+
+/* Chart Styles */
+.chart-container { background: var(--chart-bg); border-radius: 15px; padding: 20px; margin-top: 20px; border: 1px solid var(--border); }
+.chart-legend { display: flex; gap: 20px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+.legend-dot { width: 16px; height: 16px; border-radius: 50%; }
+
+/* Students Grid - Vertical Cards */
+.students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
+.student-card { background: var(--card-bg); border: 2px solid var(--border); border-radius: 20px; overflow: hidden; transition: 0.3s; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+.student-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 15px 40px rgba(102,126,234,0.2); }
+.student-card-header { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 20px; text-align: center; position: relative; }
+.student-num { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.25); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem; }
+.student-name { font-size: 1.4rem; font-weight: bold; margin-top: 5px; }
+.student-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.student-field { display: flex; flex-direction: column; gap: 4px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.student-field:last-child { border-bottom: none; }
+.field-label { color: var(--text-light); font-size: 0.85rem; font-weight: 600; }
+.field-value { color: var(--text); font-size: 1rem; font-weight: 500; }
+.student-card-actions { padding: 15px 20px; background: var(--table-header); display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; border-top: 2px solid var(--border); }
+.student-card-actions .btn { flex: 1; min-width: 100px; }
+@media(max-width:768px){ .students-grid { grid-template-columns: 1fr; } }
+.exam-builder-section{box-shadow:var(--shadow)}
+.exam-plan-row{background:var(--table-header);border:1px solid var(--border);padding:12px;border-radius:10px;margin-bottom:8px}
+.exam-question{background:var(--input-bg);border:2px solid var(--border);border-radius:14px;padding:15px;margin:12px 0}
+ .exam-question.rejected{opacity:.55;border-color:var(--danger);background:rgba(220,53,69,.06)}
+ .exam-slide-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;margin-bottom:12px;scrollbar-width:thin}
+ .exam-slide-tab{flex:0 0 auto;min-width:46px;min-height:42px;border:2px solid var(--border);border-radius:10px;background:var(--card-bg);color:var(--text);font-weight:800;cursor:pointer;transition:border-color .2s,background .2s,color .2s}
+ .exam-slide-tab:hover,.exam-slide-tab:focus-visible{border-color:var(--primary);outline:none}
+ .exam-slide-tab.active{border-color:var(--primary);background:var(--primary);color:#fff}
+ .exam-slide-tab.complete{border-color:var(--success);background:rgba(40,167,69,.12)}
+ .exam-slide-tab.expired{border-color:var(--danger);background:rgba(220,53,69,.12)}
+ .exam-slide-tab.locked{opacity:.48;cursor:not-allowed}
+ .exam-slide-panel{animation:examSlideReveal .24s ease-out}
+ @keyframes examSlideReveal{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .quran-question-media{width:100%;max-width:760px;margin:14px auto}
+  .quran-question-loading,.quran-question-error{padding:18px;text-align:center;border:1px dashed var(--border);border-radius:12px;background:var(--table-header);color:var(--text-light)}
+  .quran-question-error{color:var(--danger)}
+  .quran-question-image{display:block;width:100%;max-height:72vh;object-fit:contain;border:1px solid var(--border);border-radius:12px;background:var(--card-bg)}
+  .quran-question-retry{margin-top:10px}
+ .exam-question-header{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.exam-option{display:flex;gap:8px;align-items:center;margin:7px 0}
+.exam-timer{font-size:1.3rem;font-weight:bold;color:var(--danger)}
+.exam-sticky{position:sticky;top:8px;z-index:50;background:var(--card-bg);padding:10px;border-radius:12px;box-shadow:var(--shadow)}
+#toastBox{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none}
+.toast-item{min-width:260px;max-width:90vw;padding:14px 20px;border-radius:12px;color:#fff;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transform:translateY(-12px);transition:all .3s ease;text-align:center}
+.toast-item.show{opacity:1;transform:translateY(0)}
+.toast-success{background:linear-gradient(135deg,#28a745,#1e7e34)}
+.toast-error{background:linear-gradient(135deg,#dc3545,#a71d2a)}
+ .toast-info{background:linear-gradient(135deg,#0d6efd,#0a58ca)}
+ .exam-generation-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.78);backdrop-filter:blur(5px)}
+ .exam-generation-overlay.hidden{display:none}
+ .exam-generation-card{display:flex;flex-direction:column;align-items:center;gap:14px;width:min(92vw,420px);padding:28px;border:1px solid var(--border);border-radius:18px;background:var(--card-bg);color:var(--text);box-shadow:var(--shadow);text-align:center}
+ .exam-generation-mark{display:grid;place-items:center;width:64px;height:64px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:examSpin .8s linear infinite;font-size:24px}
+ .exam-generation-progress{width:100%;height:10px;overflow:hidden;border-radius:999px;background:var(--border)}
+ .exam-generation-progress>span{display:block;height:100%;width:8%;border-radius:inherit;background:var(--primary);transition:width .45s ease}
+ .quran-image-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+ .quran-image-button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
+ .quran-image-label{display:block;margin-bottom:6px;color:var(--text-light);font-weight:700}
+ .quran-lightbox{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.9)}
+ .quran-lightbox.hidden{display:none}.quran-lightbox img{max-width:96vw;max-height:90vh;object-fit:contain;background:var(--card-bg)}
+ .quran-lightbox-close{position:absolute;top:16px;left:16px}
+  @keyframes examSpin{to{transform:rotate(360deg)}}
+  .proctor-gate{position:fixed;inset:0;z-index:10000;background:rgba(8,15,28,.94);display:flex;align-items:center;justify-content:center;padding:16px;color:#f8fafc}.proctor-gate.hidden{display:none}.proctor-panel{width:min(100%,560px);max-height:94vh;overflow:auto;background:#111c2f;border:1px solid #334155;border-radius:18px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+  .proctor-panel h2{margin:0 0 8px;color:#f8fafc}.proctor-panel p{color:#cbd5e1;line-height:1.7}.proctor-camera{position:relative;overflow:hidden;border-radius:14px;background:#020617;aspect-ratio:4/3;margin:14px 0}.proctor-camera video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}.proctor-camera-status{position:absolute;inset:auto 10px 10px;background:rgba(2,6,23,.82);padding:7px 10px;border-radius:8px;font-size:.85rem}.proctor-touch-zone{width:100%;min-height:90px;border:2px dashed #60a5fa;border-radius:14px;background:#172554;color:#dbeafe;font-weight:700;touch-action:none;user-select:none;-webkit-user-select:none;display:flex;align-items:center;justify-content:center;text-align:center}.proctor-touch-zone.holding{background:#14532d;border-color:#4ade80;color:#dcfce7}
+  .proctor-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.proctor-check{padding:9px;border-radius:9px;background:#1e293b;color:#cbd5e1}.proctor-check.ok{background:#123d2c;color:#bbf7d0}.proctor-check.bad{background:#4c1d24;color:#fecaca}.proctor-hold{width:100%;min-height:76px;border:2px dashed #60a5fa;border-radius:14px;background:#172554;color:#dbeafe;font-weight:700;touch-action:none;user-select:none;-webkit-user-select:none}.proctor-hold.holding{background:#14532d;border-color:#4ade80;color:#dcfce7}.proctor-actions{display:flex;gap:10px;margin-top:12px}.proctor-actions .btn{flex:1}
+  .proctor-warning{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:10001;width:min(92%,520px);padding:14px;border-radius:12px;background:#7f1d1d;color:#fff;text-align:center;font-weight:700;box-shadow:0 12px 35px rgba(0,0,0,.35)}.proctor-bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#111c2f;color:#f8fafc;border-radius:12px;padding:10px 12px;margin-bottom:12px}.proctor-live-hold{min-width:140px;min-height:48px;border:2px dashed #60a5fa;border-radius:10px;background:#172554;color:#dbeafe;font-weight:700;touch-action:none}.proctor-live-hold.holding{background:#14532d;border-color:#4ade80}
+.student-work-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.student-work-card{margin:0!important;min-width:0;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}.student-work-card:hover,.student-work-card:focus-within{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--primary)}.student-work-card>h4{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.student-work-card .work-card-action{width:100%;margin-top:12px}.student-work-modal{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(8,15,28,.82);backdrop-filter:blur(4px)}.student-work-modal.hidden{display:none}.student-work-dialog{width:min(100%,820px);max-height:92dvh;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);border-radius:18px;background:var(--card-bg);box-shadow:0 24px 70px rgba(0,0,0,.4)}.student-work-dialog-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border)}.student-work-dialog-header h3{margin:0;color:var(--primary)}.student-work-dialog-body{overflow:auto;padding:18px;overscroll-behavior:contain}.student-work-dialog-body .task-card{margin-bottom:12px}.proctor-settings-grid{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:10px;margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--table-header)}
+@media(max-width:800px){.student-work-grid{grid-template-columns:1fr}.proctor-settings-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.proctor-panel{padding:14px}.proctor-checks{grid-template-columns:1fr}.proctor-camera{aspect-ratio:16/11}.proctor-bar{align-items:stretch;flex-direction:column}.proctor-live-hold{width:100%}.student-work-dialog-body{padding:12px}}
+  /* Thimar visual system — presentation only; existing IDs and actions remain untouched. */
+  :root { --bg: #f7faf7; --card-bg: #ffffff; --text: #18352b; --text-light: #62766d; --border: #dce9df; --primary: #28734f; --primary-hover: #1d5c3e; --success: #4f9467; --warning: #bc9450; --info: #4c7e83; --secondary: #718179; --input-bg: #fcfffc; --table-header: #f1f7f2; --table-hover: #f5faf6; --shadow: 0 18px 55px rgba(33, 86, 57, .10); }
+  [data-theme="dark"] { --bg:#12251d; --card-bg:#1b3328; --text:#edf7ef; --text-light:#b7cbbd; --border:#315344; --primary:#8fbd82; --primary-hover:#a6ce99; --success:#72aa7e; --warning:#d6b568; --info:#80b5b1; --secondary:#8ca49a; --input-bg:#213b2f; --table-header:#234336; --table-hover:#294c3d; --shadow:0 18px 55px rgba(0,0,0,.25); }
+  body { background:var(--bg); background-image:radial-gradient(circle at 10% 18%, rgba(40,115,79,.08) 0 1px, transparent 1px), linear-gradient(135deg, transparent 0 48%, rgba(188,148,80,.035) 48% 52%, transparent 52%); background-size:30px 30px, 96px 96px; }
+  body::after { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.35; background-image:linear-gradient(30deg, transparent 0 46%, rgba(40,115,79,.045) 46% 54%, transparent 54%), linear-gradient(150deg, transparent 0 46%, rgba(188,148,80,.035) 46% 54%, transparent 54%); background-size:160px 160px; }
+  .container { max-width:1440px; padding:24px clamp(16px, 3vw, 48px) 100px; }
+  .display-controls { top:18px; left:18px; }
+  .theme-toggle,.lang-toggle { width:42px; height:42px; min-width:42px; min-height:42px; border:1px solid var(--border); box-shadow:0 8px 24px rgba(33,86,57,.12); }
+  .page { border-radius:24px; padding:clamp(20px, 3vw, 34px); box-shadow:var(--shadow); }
+  .page-header { border-bottom:1px solid var(--border); padding-bottom:18px; margin-bottom:24px; }
+  .page-header h2 { font-size:clamp(1.25rem, 2vw, 1.75rem); letter-spacing:-.02em; }
+  .btn { min-height:44px; border-radius:12px; padding:10px 18px; font-weight:700; box-shadow:none; }
+  .btn-primary { background:var(--primary); } .btn-primary:hover { background:var(--primary-hover); }
+  .btn-outline { border:1px solid var(--primary); }
+  .form-group input,.form-group select,.form-group textarea,.search-box input { border:1px solid var(--border); border-radius:12px; min-height:44px; }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus,.search-box input:focus { box-shadow:0 0 0 4px rgba(40,115,79,.12); }
+  .home-page { position:relative; overflow:hidden; padding:clamp(18px, 4vw, 56px) 0 30px; text-align:initial; }
+  .home-page::before { content:'ثمار'; display:block; color:var(--primary); font-size:clamp(2.6rem, 7vw, 5.5rem); font-weight:900; line-height:1; letter-spacing:-.06em; margin-bottom:10px; }
+  .home-page::after { content:'منصة قرآنية للتعلّم، التسميع، والنمو بثبات'; display:block; max-width:560px; color:var(--text-light); font-size:clamp(1rem, 2vw, 1.25rem); line-height:1.8; margin-bottom:34px; }
+  .home-page h1 { color:var(--text); text-shadow:none; font-size:clamp(1.6rem, 4vw, 3rem); margin-bottom:10px; }
+  .home-page > p { color:var(--text-light); font-size:1rem; margin-bottom:30px; }
+  .home-page .cards { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:16px; justify-content:stretch; }
+  .home-page .card { width:auto; min-height:190px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; text-align:right; padding:24px; border:1px solid var(--border); border-radius:20px; box-shadow:0 10px 32px rgba(33,86,57,.07); }
+  .home-page .card:hover { transform:translateY(-5px); box-shadow:var(--shadow); border-color:var(--primary); }
+  .home-page .card .icon { font-size:2.7rem; margin-bottom:18px; } .home-page .card h3 { font-size:1.25rem; } .home-page .card p { line-height:1.7; }
+  #adminDashboard .page-header, #studentDashboard .page-header, #parentDashboard .page-header { background:linear-gradient(135deg, rgba(40,115,79,.08), transparent); border:1px solid var(--border); border-radius:20px; padding:20px; }
+  .stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+  .stat-box { min-width:0; border-radius:18px; padding:22px; background:var(--primary); box-shadow:0 10px 28px rgba(33,86,57,.12); }
+  .stat-box:nth-child(2) { background:#4f9467; } .stat-box:nth-child(3) { background:#4c7e83; } .stat-box:nth-child(4) { background:#bc9450 !important; }
+  .menu-grid { grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+  .menu-btn { min-height:110px; border-radius:18px; background:var(--card-bg) !important; border:1px solid var(--border); color:var(--text); box-shadow:0 8px 24px rgba(33,86,57,.06); }
+  .menu-btn:hover { transform:translateY(-4px); border-color:var(--primary); color:var(--primary); }
+  .student-work-grid { gap:16px; } .student-work-card { background:var(--card-bg); border:1px solid var(--border); border-radius:20px; padding:20px; }
+  .record-element,.homework-section,.reading-section { border:1px solid var(--border); border-radius:18px; box-shadow:0 8px 24px rgba(33,86,57,.05); }
+  .record-element { background:var(--card-bg); } .homework-section { background:rgba(79,148,103,.07); } .reading-section { background:rgba(188,148,80,.08); }
+  .msg-item { border-right:3px solid var(--primary); border-radius:14px; background:var(--table-header); }
+  @media(max-width:1000px){ .home-page .cards,.menu-grid,.stats { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(max-width:620px){ .container { padding-inline:12px; } .home-page .cards,.menu-grid,.stats { grid-template-columns:1fr; } .home-page .card { min-height:150px; } .page { padding:18px; border-radius:18px; } .display-controls { top:10px; left:10px; } }
+  @media(prefers-reduced-motion:reduce){ *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; } }
+  /* شاشة ترحيب ثمار */
+  #thimarWelcome { position:fixed; inset:0; z-index:12000; display:flex; align-items:center; justify-content:center; overflow:auto; padding:24px; background:radial-gradient(circle at 50% 15%, rgba(191,153,74,.14), transparent 34%), linear-gradient(145deg,#f8fcf8 0%,#e7f1e8 100%); color:#1d4d39; transition:opacity .65s ease, visibility .65s ease; }
+  #thimarWelcome.is-hidden { opacity:0; visibility:hidden; pointer-events:none; }
+  #thimarWelcome::before,#thimarWelcome::after { content:''; position:absolute; width:240px; height:240px; border:1px solid rgba(191,153,74,.22); transform:rotate(45deg); pointer-events:none; }
+  #thimarWelcome::before { top:-100px; inset-inline-start:-100px; box-shadow:0 0 0 18px rgba(45,112,76,.035),0 0 0 36px rgba(191,153,74,.035); }
+  #thimarWelcome::after { bottom:-110px; inset-inline-end:-110px; box-shadow:0 0 0 18px rgba(45,112,76,.035),0 0 0 36px rgba(191,153,74,.035); }
+  .thimar-welcome-inner { width:min(760px,100%); text-align:center; padding:clamp(28px,6vw,68px) clamp(20px,6vw,72px); border:1px solid rgba(45,112,76,.18); border-radius:32px; background:rgba(255,255,255,.72); box-shadow:0 28px 80px rgba(35,88,54,.14); backdrop-filter:blur(12px); position:relative; }
+  .thimar-welcome-title { margin:0; color:#1d5038; font-family:'diwanltr','Diwani Letter','Traditional Arabic',serif; font-size:clamp(2.8rem,9vw,6rem); font-weight:900; letter-spacing:-.08em; line-height:1.1; text-shadow:0 2px 0 rgba(191,153,74,.25),0 10px 26px rgba(45,112,76,.13); }
+  .thimar-welcome-subtitle { margin:12px 0 26px; color:#587264; font-size:clamp(1.1rem,3vw,1.55rem); font-weight:700; }
+  .thimar-ayah { margin:0 auto 24px; max-width:650px; color:#254d3a; font-family:'Amiri','Traditional Arabic','Segoe UI',serif; font-size:clamp(1.45rem,4vw,2.45rem); line-height:2.05; text-shadow:0 0 18px rgba(191,153,74,.26); }
+  .thimar-ayah::before,.thimar-ayah::after { content:'۞'; color:#bf994a; font-family:serif; font-size:.8em; margin-inline:12px; }
+  .thimar-description { margin:0 auto 26px; color:#6a7f73; font-size:clamp(.95rem,2vw,1.15rem); }
+  .thimar-intention { margin:0 0 8px; color:#799084; font-size:.9rem; }
+  .thimar-prayer { margin:0 0 24px; color:#a17735; font-size:1rem; font-weight:700; }
+  .thimar-welcome-actions { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .thimar-welcome-audio { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:18px; color:#72887b; font-size:.82rem; }
+  .thimar-welcome-audio button { border:0; background:transparent; color:#2d704c; cursor:pointer; font-weight:700; text-decoration:underline; }
+  @media(max-width:520px){ #thimarWelcome { padding:14px; } .thimar-welcome-inner { border-radius:24px; } .thimar-welcome-mark { width:66px; height:66px; font-size:1.5rem; } .thimar-ayah::before,.thimar-ayah::after { margin-inline:4px; } }
+  /* شريط تنقل موحد داخل لوحات الأدوار (بدل الشريط الجانبي المنزلق) */
+  .role-nav { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px; padding:14px; border:1px solid var(--border); border-radius:16px; background:var(--card-bg); box-shadow:var(--shadow); }
+  .role-nav-item { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border:1px solid var(--border); border-radius:12px; background:var(--table-header); color:var(--text); cursor:pointer; font-weight:700; font-size:.92rem; transition:border-color .15s ease, color .15s ease, background .15s ease; }
+  .role-nav-item:hover, .role-nav-item:focus-visible { border-color:var(--primary); color:var(--primary); background:var(--input-bg); outline:none; }
+  .role-nav-item .role-nav-icon { font-size:1.05rem; }
+  @media(max-width:520px){ .role-nav-item { flex:1 1 calc(50% - 10px); justify-content:center; } }
+  /* شريط جانبي منزلق للأدوات الثانوية داخل لوحات الأدوار فقط */
+  .side-fab { position:fixed; top:18px; right:18px; z-index:1050; width:50px; height:50px; min-width:50px; border-radius:50%; border:1px solid var(--border); background:var(--card-bg); color:var(--primary); cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; box-shadow:0 8px 24px rgba(33,86,57,.16); }
+  .side-fab:hover { border-color:var(--primary); transform:translateY(-2px); }
+  .side-fab span { display:block; width:20px; height:2px; border-radius:2px; background:currentColor; }
+  .side-sidebar-wrap { position:fixed; inset:0; z-index:9500; visibility:hidden; pointer-events:none; }
+  .side-sidebar-wrap.open { visibility:visible; pointer-events:auto; }
+  .side-sidebar-overlay { position:fixed; inset:0; background:rgba(15,23,42,.42); opacity:0; transition:opacity .26s ease; }
+  .side-sidebar-wrap.open .side-sidebar-overlay { opacity:1; }
+  .side-sidebar { position:fixed; top:0; bottom:0; inset-inline-end:0; width:min(320px,86vw); display:flex; flex-direction:column; background:var(--card-bg); border-inline-start:1px solid var(--border); box-shadow:-14px 0 44px rgba(15,23,42,.22); transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1); overflow-y:auto; }
+  [dir="rtl"] .side-sidebar { transform:translateX(-100%); }
+  .side-sidebar-wrap.open .side-sidebar { transform:translateX(0); }
+  .side-sidebar-head { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:18px 20px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--card-bg); }
+  .side-sidebar-head h3 { margin:0; color:var(--primary); font-size:1.1rem; }
+  .side-sidebar-close { width:38px; height:38px; border-radius:50%; border:1px solid var(--border); background:var(--table-header); color:var(--text); font-size:1.3rem; line-height:1; cursor:pointer; }
+  .side-sidebar-close:hover { border-color:var(--danger); color:var(--danger); }
+  .side-sidebar-body { display:flex; flex-direction:column; gap:10px; padding:18px 16px; }
+  .side-sidebar-body .role-nav-item { width:100%; justify-content:flex-start; }
+  /* إخفاء الخط الجانبي (شريط التمرير) مع الإبقاء على إمكانية التمرير. */
+  html { scrollbar-width:none; -ms-overflow-style:none; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { width:0; height:0; display:none; }
+  body { -ms-overflow-style:none; }
+  #lockScreen .btn:disabled { opacity:.75; cursor:wait; }
+  
+/* لوحة الطالب وولي الأمر المستوحاة من الواجهة المرجعية، مع وظائف فعلية */
+.daily-hub{max-width:1180px;margin:0 auto 20px;border-radius:28px;overflow:hidden;background:linear-gradient(160deg,#063f39,#075349 48%,#0a6955);color:#fff;box-shadow:0 20px 55px rgba(7,55,48,.25)}
+.daily-hub-head{min-height:260px;padding:28px;position:relative;background:linear-gradient(90deg,rgba(1,42,37,.9),rgba(1,62,55,.58)),url('/student-parent-dashboard-reference.jpg') center/cover}
+.daily-hub-head:after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(255,224,75,.14),transparent 25%);pointer-events:none}.daily-hub-top,.daily-hub-info{position:relative;z-index:1;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.daily-hub-location{font-size:1.45rem;font-weight:800}.daily-hub-date{margin-top:48px;font-size:1.45rem}.daily-hub-hijri{margin-top:10px;font-size:1.1rem;opacity:.88}.daily-prayer{margin-top:42px;display:flex;justify-content:flex-end;gap:14px;align-items:baseline;position:relative;z-index:1}.daily-prayer-name{font-size:2rem;font-weight:900;color:#ffe600}.daily-prayer-time{font-size:3.8rem;font-weight:900;line-height:1}.daily-hub-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--card-bg,#fff);color:var(--text,#111)}.daily-hub-card{border:0;border-left:1px solid #eee;background:transparent;padding:24px 10px;min-height:170px;font:inherit;color:inherit;cursor:pointer;text-align:center;transition:.2s}.daily-hub-card:hover{background:#f7fbf8;transform:translateY(-2px)}.daily-hub-card .hub-icon{font-size:3.4rem;display:block;margin-bottom:10px}.daily-hub-card .hub-label{font-size:1.3rem;font-weight:800}.qibla-compass{width:240px;height:240px;border-radius:50%;margin:24px auto;border:12px solid var(--primary);display:grid;place-items:center;background:conic-gradient(from 0deg,#f7f7f7,#d7eee0,#f7f7f7);position:relative}.qibla-arrow{font-size:6rem;transform-origin:center;transition:transform .5s ease}.quran-reader{display:grid;grid-template-columns:300px 1fr;gap:16px}.quran-surah-list{max-height:75vh;overflow:auto;border:1px solid var(--border);border-radius:14px;background:var(--card-bg)}.quran-surah-btn{display:flex;width:100%;justify-content:space-between;gap:8px;padding:11px 12px;border:0;border-bottom:1px solid var(--border);background:transparent;color:inherit;cursor:pointer;text-align:right}.quran-surah-btn:hover,.quran-surah-btn.active{background:var(--table-header);color:var(--primary)}.quran-viewer{min-height:75vh;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff}.quran-viewer iframe{width:100%;height:75vh;border:0}.content-list{display:grid;gap:10px}.content-item{padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--card-bg)}
+@media(max-width:850px){.daily-hub-grid{grid-template-columns:repeat(2,1fr)}.daily-hub-card{border-bottom:1px solid #eee}.daily-hub-head{min-height:220px}.daily-prayer-time{font-size:2.6rem}.quran-reader{grid-template-columns:1fr}.quran-surah-list{max-height:320px}.quran-viewer,.quran-viewer iframe{min-height:65vh;height:65vh}}
+</style>
+</head>
+<body>
+
+  <div class="display-controls" aria-label="إعدادات العرض">
+    <button class="theme-toggle" type="button" onclick="toggleTheme()" title="تبديل الوضع" aria-label="تبديل الوضع">🌙</button>
+    <button class="lang-toggle" type="button" id="langToggleBtn" onclick="toggleLang()" title="تغيير اللغة / Change language" aria-label="تغيير اللغة / Change language">EN</button>
+  </div>
+  <div id="examGenerationOverlay" class="exam-generation-overlay hidden" role="status" aria-live="polite" aria-busy="true">
+    <div class="exam-generation-card"><div class="exam-generation-mark" aria-hidden="true">AI</div><strong id="examGenerationTitle">جاري تجهيز الاختبار</strong><span id="examGenerationStage">جلب الآيات من النطاق المحدد...</span><div class="exam-generation-progress"><span id="examGenerationBar"></span></div><span id="examGenerationEta">الوقت المتبقي التقريبي: 01:30</span></div>
+  </div>
+  <div id="quranImageLightbox" class="quran-lightbox hidden" role="dialog" aria-modal="true" aria-label="تكبير صورة السؤال" onclick="if(event.target===this)closeQuranImage()"><button class="btn btn-secondary quran-lightbox-close" onclick="closeQuranImage()">إغلاق</button><img id="quranImageLightboxImg" alt="صورة السؤال القرآني بحجم كبير"></div>
+
+<div class="container">
+
+<!-- شاشة القفل الموحدة -->
+<div id="lockScreen" class="page" style="max-width:480px; margin:40px auto;">
+  <div class="page-header"><h2>🔒 دخول النظام</h2></div>
+  <div id="unifiedLoginAlert"></div>
+  <div class="form-group"><label>اسم المستخدم</label><input type="text" id="unifiedUser" placeholder="اسم المستخدم (أو رقم الموبايل للمسؤول)" onkeypress="if(event.key==='Enter')unifiedLogin()"></div>
+  <div class="form-group"><label>الرقم السري</label><div style="position:relative;"><input type="password" id="unifiedPass" placeholder="أدخل الرقم السري" style="padding-left:45px;" onkeypress="if(event.key==='Enter')unifiedLogin()"><span onclick="togglePassVisibility('unifiedPass', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span></div></div>
+  <button class="btn btn-primary" onclick="unifiedLogin()" style="width:100%">🔓 دخول</button>
+  <div style="margin-top:18px; padding-top:15px; border-top:2px solid var(--border); text-align:center;">
+    <p style="color:var(--text-light); margin-bottom:10px;">ليس لديك حساب؟ أرسل طلب انضمام للمسؤول.</p>
+    <button class="btn btn-success" onclick="startSignup()" style="width:100%">🆕 إنشاء حساب جديد</button>
+  </div>
+</div>
+
+<!-- الصفحة الرئيسية -->
+<div id="homePage" class="home-page hidden">
+  <h1>📚 نظام إدارة الطلاب</h1>
+  <p>مرحباً بك — اختر طريقة استخدامك للموقع</p>
+  <div class="cards">
+    <div class="card" onclick="showPage('adminLogin')"><div class="icon">👨‍💼</div><h3>المسؤول</h3><p>التحكم الكامل في النظام والطلاب</p></div>
+    <div class="card" onclick="showPage('studentLogin')"><div class="icon">👨‍🎓</div><h3>الطالب</h3><p>متابعة المواد والواجبات والحفظ</p></div>
+    <div class="card" onclick="showPage('parentLogin')"><div class="icon">👨‍👩‍👧</div><h3>ولي الأمر</h3><p>متابعة ابنك/ابنتك والتقارير</p></div>
+    <div class="card" onclick="startSignup()"><div class="icon">🆕</div><h3>إنشاء حساب جديد</h3><p>تسجيل بجوجل أو رقم الواتساب ثم إرسال طلب إلى المسؤول</p></div>
+  </div>
+</div>
+
+<!-- إنشاء حساب: الخطوة الأولى (التحقق من الهوية) -->
+<div id="signupStep1" class="page hidden" style="max-width:560px; margin:40px auto;">
+  <div class="page-header"><h2>🆕 إنشاء حساب — التحقق من الهوية</h2><button class="btn btn-secondary" onclick="showPage('lockScreen')">رجوع</button></div>
+  <div id="signupStep1Alert"></div>
+  <p style="color:var(--text-light); margin-bottom:15px;">اختر طريقة التسجيل، وسيتم إرسال رسالة تحقق على واتساب للتأكد من هويتك قبل إدخال البيانات.</p>
+  <div class="form-row" style="margin-bottom:5px;">
+    <div class="form-group"><button class="btn btn-outline" id="signupMethodGoogleBtn" onclick="setSignupMethod('google')" style="width:100%">🔵 التسجيل بحساب جوجل</button></div>
+    <div class="form-group"><button class="btn btn-outline" id="signupMethodPhoneBtn" onclick="setSignupMethod('phone')" style="width:100%">🟢 التسجيل برقم الهاتف (واتساب)</button></div>
+  </div>
+  <!-- منطقة التسجيل بحساب جوجل: تظهر حسابات جوجل الموجودة على الجهاز للاختيار مباشرةً بدون تحقق واتساب -->
+  <div class="form-group" id="signupGoogleBox" style="display:none;">
+    <label>اختر حساب جوجل لإكمال التسجيل *</label>
+    <div id="googleBtnContainer" style="display:flex; justify-content:center; margin:10px 0;"></div>
+    <p style="color:var(--text-light); font-size:0.9rem; margin-top:5px;">اضغط لعرض حسابات جوجل الموجودة على جهازك واختيار أحدها. لن يُطلب منك رقم هاتف أو كود تحقق.</p>
+  </div>
+  <!-- منطقة التسجيل برقم اءءءءهاتف: تظهر خانة الواتساب وكود التحقق فقط -->
+  <div id="signupPhoneBox" style="display:none;">
+    <div class="form-group"><label>رقم الواتساب لاستلام كود التحقق *</label><div style="display:flex; gap:8px; direction:ltr;"><select id="signupWhatsCountry" aria-label="كود دولة الواتساب" style="max-width:145px;"><option value="20">مصر (+20)</option><option value="966">السعودية (+966)</option><option value="971">الإمارات (+971)</option><option value="974">قطر (+974)</option><option value="965">الكويت (+965)</option><option value="962">الأردن (+962)</option><option value="212">المغرب (+212)</option><option value="213">الجزائر (+213)</option><option value="216">تونس (+216)</option><option value="1">أمريكا/كندا (+1)</option><option value="44">بريطانيا (+44)</option><option value="49">ألمانيا (+49)</option><option value="90">تركيا (+90)</option></select><input type="text" id="signupWhats" placeholder="رقم واتساب بدون كود الدولة" oninput="this.value=this.value.replace(/\D/g,''); updateSignupInternationalNumber('signupWhats','signupWhatsCountry','signupWhatsInternational')" style="flex:1; direction:ltr;"></div><small id="signupWhatsInternational" style="color:var(--text-light)">الرقم الدولي: +20</small></div>
+    <button class="btn btn-primary" id="signupSendCodeBtn" onclick="sendSignupCode()" style="width:100%">📩 إرسال كود التحقق على واتساب</button>
+    <div id="signupVerifyBox" class="hidden" style="margin-top:18px; padding-top:15px; border-top:2px solid var(--border);">
+      <div class="form-group"><label>كود التحقق (6 أرقام) *</label><input type="text" id="signupCode" maxlength="6" placeholder="أدخل الكود الذي وصلك" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+      <button class="btn btn-success" onclick="verifySignupCode()" style="width:100%">✅ تأكيد الهوية والمتابعة</button>
+      <button class="btn btn-outline" onclick="sendSignupCode()" style="width:100%; margin-top:10px;">🔁 إعادة إرسال الكود</button>
+    </div>
+  </div>
+</div>
+
+<!-- إنشاء حساب: الخطوة الثانية (البيانات) -->
+<div id="signupStep2" class="page hidden" style="max-width:720px; margin:40px auto;">
+  <div class="page-header"><h2>📝 بيانات طلب الانضمام</h2><button class="btn btn-secondary" onclick="showPage('signupStep1')">رجوع</button></div>
+  <div id="signupStep2Alert"></div>
+  <div class="alert alert-success" id="signupVerifiedNote">✅ تم التحقق من هويتك بنجاح.</div>
+  <div class="form-row">
+    <div class="form-group"><label>نوع الحساب *</label><select id="signupRole" onchange="syncSignupRelationshipField()"><option value="student">طالب</option><option value="parent">ولي أمر</option></select></div>
+    <div class="form-group"><label>الاسم بالكامل *</label><input type="text" id="signupName" placeholder="الاسم كما في البطاقة"></div>
+  </div>
+  <div class="form-group" id="signupRelationshipGroup">
+    <label id="signupRelationshipLabel">اسم ولي الأمر *</label>
+    <input type="text" id="signupRelationshipName" placeholder="اكتب اسم ولي الأمر بالكامل">
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم القومي *</label><input type="text" id="signupNid" maxlength="14" placeholder="14 رقم" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+    <div class="form-group"><label>رقم الهاتف *</label><div style="display:flex; gap:8px; direction:ltr;"><select id="signupPhoneCountry" aria-label="كود دولة الهاءءءءءءءءءءءءف" onchange="updateSignupInternationalNumber('signupPhone','signupPhoneCountry','signupPhoneInternational')" style="max-width:145px;"><option value="20">مصر (+20)</option><option value="966">السعودية (+966)</option><option value="971">الإمءءرات (+971)</option><option value="974">قطر (+974)</option><option value="965">الكويت (+965)</option><option value="962">الأردن (+962)</option><option value="212">المغرب (+212)</option><option value="213">الجزائر (+213)</option><option value="216">تونس (+216)</option><option value="1">أمريكا/كندا (+1)</option><option value="44">بريطانيا (+44)</option><option value="49">ألمانيا (+49)</option><option value="90">تركيا (+90)</option></select><input type="text" id="signupPhone" placeholder="رقم الهاتف بدون كود الدولة" oninput="this.value=this.value.replace(/\D/g,'')" style="flex:1; direction:ltr;"></div><small id="signupPhoneInternational" style="color:var(--text-light)">الرقم الدولي: +20</small></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الجزء</label><select id="signupJuz" onchange="updateSignupSurahSelect()"><option value="">اختر الجزء...</option></select></div>
+    <div class="form-group"><label>السورة</label><select id="signupSurah"><option value="">اختر الجزء أولاً...</option></select></div>
+  </div>
+  <div class="form-group"><label>ملاحظات</label><textarea id="signupNotes" rows="3" placeholder="أي معلومات إضافية تريد إبلاغ المسؤول بها"></textarea></div>
+  <button class="btn btn-success" onclick="submitSignupRequest()" style="width:100%">📤 إرسال الطلب للمسؤول</button>
+</div>
+
+<!-- دخول المسؤول -->
+<div id="adminLogin" class="page hidden" style="max-width:500px; margin:40px auto;">
+  <div class="page-header"><h2>🔐 دخول المسؤول</h2></div>
+  <div id="adminLoginAlert"></div>
+  <div class="form-group"><label>رقم الموبايل</label><input type="text" id="adminMobile" placeholder="أدخل رقم الموبايل" maxlength="11"></div>
+  <div class="form-group"><label>الرقم السري</label><input type="password" id="adminPass" placeholder="أدخل الرقم السري"></div>
+  <button class="btn btn-primary" onclick="adminLogin()" style="width:100%">دخول</button>
+  <button class="btn btn-secondary" onclick="showPage('homePage')" style="width:100%; margin-top:10px">رجوع للرئيسية</button>
+</div>
+
+<!-- لوحة المسؤول -->
+<div id="adminDashboard" class="page hidden">
+  <div class="page-header">
+    <h2>📊 لوحة تحكم المسؤول</h2>
+    <div>
+      <span id="adminDeviceInfo" style="color:var(--text-light); margin-left:15px; font-size:0.9rem"></span>
+      <button class="btn btn-outline" onclick="logout()">خروج</button>
+    </div>
+  </div>
+  <button type="button" class="side-fab" onclick="openRoleSidebar('admin')" aria-label="فتح قائمة الأدوات" aria-controls="sidebar-admin" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div id="sidebar-admin" class="side-sidebar-wrap">
+    <div class="side-sidebar-overlay" onclick="closeRoleSidebar('admin')"></div>
+    <aside class="side-sidebar" aria-label="أدوات المسؤول">
+      <div class="side-sidebar-head">
+        <h3>الأدوات</h3>
+        <button type="button" class="side-sidebar-close" onclick="closeRoleSidebar('admin')" aria-label="إغلاق القائمة">×</button>
+      </div>
+      <div class="side-sidebar-body">
+        <button type="button" class="role-nav-item" onclick="showPage('messagesPage')"><span class="role-nav-icon" aria-hidden="true">💬</span><span>الرسائل</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('adminSettings')"><span class="role-nav-icon" aria-hidden="true">⚙️</span><span>الإعدادات</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('filesPage')"><span class="role-nav-icon" aria-hidden="true">📁</span><span>الملفات المرفوعة</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('devAssistantPage')"><span class="role-nav-icon" aria-hidden="true">🛠️</span><span>مساعد تطوير الموقع</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('adminAIPage')"><span class="role-nav-icon" aria-hidden="true">✦</span><span>المحادثة مع الذكاء الاصطناعي</span></button>
+        <button type="button" class="role-nav-item" onclick="openGithubSync()"><span class="role-nav-icon" aria-hidden="true">🔗</span><span>مزامنة GitHub</span></button>
+      </div>
+    </aside>
+  </div>
+  <div class="stats">
+    <div class="stat-box" onclick="showPage('studentsList')" title="عرض قائمة الطلاب"><div class="num" id="statStudents">0</div><div class="label">عدد الطلاب</div><button class="stat-action" onclick="event.stopPropagation();showPage('addStudent')">➕ إضافة طالب جديد</button></div>
+    <div class="stat-box"><div class="num" id="statTeachers">0</div><div class="label">عدد المعلمين</div><button class="stat-action" onclick="showPage('subjectsPage')">📚 المواد والمعلمين</button></div>
+    <div class="stat-box"><div class="num" id="statAdmins">0</div><div class="label">المسؤولين</div><button class="stat-action" onclick="showPage('adminsPage')">👨‍💼 إدارة المسؤولين</button></div>
+    <div class="stat-box" style="background:linear-gradient(135deg,#ffc107,#ff9800)"><div class="num" id="statDrafts">0</div><div class="label">تسميعات نشطة</div></div>
+  </div>
+  <div id="activeDraftsSection"></div>
+
+</div>
+
+<div id="adminAIPage" class="page hidden" style="max-width:820px;margin:40px auto;">
+  <div class="page-header"><h2>مساعد Gemini / Groq الإداري</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <p style="color:var(--text-light);margin-bottom:15px;">محادثة ذكية دقيقة للأسئلة الإدارية والعامة، مع الاستفادة من بانات الموقع عندما تكون مرتبطة بسؤالك.</p>
+  <div class="ai-chat"><div id="adminChatMessages" class="ai-chat-messages"><div class="ai-msg bot">كيف يمكنني مساعدتك في متابعة الطلاب أو أولياء الأمور أو الاختبارات؟</div></div><div class="ai-input"><span class="badge badge-primary">Gemini / Groq</span><input id="adminChatInput" placeholder="اسأل عن بيانات الموقع..." onkeypress="if(event.key==='Enter' && !event.isComposing && event.keyCode!==229)sendAdminChat()"><button class="btn btn-primary" onclick="sendAdminChat()">إرسال</button></div></div>
+</div>
+
+<!-- مساعد تطوير الموقع بالذكاء الاصطناعي (للمسؤول فقط) -->
+<div id="devAssistantPage" class="page hidden" style="max-width:820px; margin:40px auto;">
+  <div class="page-header"><h2>🛠️ مساعد تطوير الموقع بالذكاء الاصطناعي</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <p style="color:var(--text-light); margin-bottom:12px;">اكتب طلب التطوير بالعربية. سيحلّل نموذج الذكاء الاصطناعي المشروع الحالي مباشرة عبر مزوده، ويقرأ الملفات البرمجية اللازمة، ويولّد الكود، ثم يطبّق التعديل تلقائياً على GitHub ويشغّل تحديث الموقع. لا توجد خطوة موافقة ثانية.</p>
+  <div style="background:rgba(255,193,7,0.12); border:1px solid #ffc107; border-radius:10px; padding:10px 14px; margin-bottom:15px; color:var(--text); font-size:0.9rem;">
+    ⚡ الوضع التلقائي المباشر: بعد إرسال الطلب سيحلله الذكاء الاصطناعي ويقرأ الكو�� المطلوب ويعدّله تلقائياً. ستظهر هنا نتيجة التنفيذ والملفات التي تغّرت وروابط الـcommit. مفتاحا Gemini وGroq وGitHub يبقيان على الخادم فقط.
+  </div>
+  <div id="devAssistantAlert"></div>
+  <div id="cloudSaveStatus" class="badge badge-success" style="margin-bottom:12px;">الحفظ التلقائي في Neon مفعّل</div>
+  <div class="form-group">
+    <label>طلب التطوير</label>
+    <textarea id="devAssistantInput" rows="4" placeholder="اكتب ما تر��د إضافته أو تعديله ف الموقع..."></textarea>
+  </div>
+  <button class="btn btn-primary" id="devAssistantBtn" onclick="runDevAssistant()" style="width:100%">تنفيذ التعديل بالذكاء الاصطناعي</button>
+  <div id="devProgressPanel" style="display:none;margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:12px;">
+    <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;"><strong id="devProgressLabel">تحليل الطلب</strong><span id="devEta">الءءقت المتبقي: 02:00</span></div>
+    <div style="height:9px;background:var(--border);border-radius:999px;overflow:hidden;"><div id="devProgressBar" style="height:100%;width:8%;background:var(--primary);transition:width .5s;"></div></div>
+  </div>
+  <div id="devAssistantResult" style="margin-top:20px;"></div>
+
+  <!-- سجل تدقيق عمليات مساعد التطوير (Audit Log) -->
+  <div style="margin-top:28px; border-top:1px solid var(--border); padding-top:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+      <h3 style="margin:0;">🧾 سجل التدقيق (Audit Log)</h3>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-secondary" onclick="renderDevAudit()">🔄 تحديث</button>
+        <button class="btn" style="background:#dc3545;color:#fff;" onclick="clearDevAudit()">🗑️ مسح السجل</button>
+      </div>
+    </div>
+    <p style="color:var(--text-light); font-size:0.85rem; margin-bottom:12px;">يُسجَّل هنا كل طلب ينفّذه مساعد التطوير: الوقت، المسؤول، نص الطلب، الحالة (نجح/فشل/محظور)، الملفات التي تغيّرت وروابط الـcommit. يُحفَظ السجل محلياً في هذا المتصفح.</p>
+    <div id="devAuditLog"></div>
+  </div>
+</div>
+
+<!-- مزامنة GitHub (للمسؤول فقط) -->
+<div id="githubSyncPage" class="page hidden" style="max-width:820px; margin:40px auto;">
+  <div class="page-header"><h2>🔗 مزامنة المشروع مع GitHub</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <p style="color:var(--text-light); margin-bottom:12px;">المشروع مرتبط بمستودعك ا��شخصي فقط عبر متغيرات البيئة على الخادم (<code>GITHUB_TOKEN</code>, <code>GITHUB_OWNER</code>, <code>GITHUB_REPO</code>, <code>GITHUB_BRANCH</code>). كل إضافة أو تعديل يقوم به مساعد التطوير يُنشئ <b>Commit</b> ويُدفع تلقائياً إلى فرعك المحدد، مع الحفاظ على كامل تاريخ الإصدارات. لا يتم وضع أي مفتاح أو سرّ داخل الملفات أو في المتصفح.</p>
+  <div id="githubSyncAlert"></div>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+    <button class="btn btn-primary" id="githubSyncRefreshBtn" onclick="refreshGithubSync()">🔄 تحقق من حالة المزامنة</button>
+    <a class="btn btn-secondary" id="githubHistoryLink" href="#" target="_blank" rel="noopener" style="display:none;">📜 فتح سجل التعديلات عل GitHub</a>
+  </div>
+  <div id="githubSyncStatus" style="margin-bottom:20px;"></div>
+
+  <!-- حذف ملف بتأكيد صريح -->
+  <div id="githubDeleteBox" style="display:none; background:rgba(220,53,69,0.08); border:1px solid #dc3545; border-radius:10px; padding:14px 16px;">
+    <h3 style="margin:0 0 8px; color:#dc3545;">🗑️ حذف ملف من المستودع</h3>
+    <p style="color:var(--text-light); font-size:0.88rem; margin-bottom:10px;">ءءُءءشئ الحذف Commit في مستودعك ويحافظ على الإصدارات السابقة في السجل. الملفات الأساسية للمشروع محمية ولا يمكن حذفها. يتطلب الحذف تأكيداً صريحاً.</p>
+    <div class="form-group"><label>مسر الملف المراد حذفه</label><input id="githubDeletePath" placeholder="مثال: public/old-file.js" /></div>
+    <label style="display:flex; gap:8px; align-items:center; font-size:0.88rem; margin-bottom:10px;"><input type="checkbox" id="githubDeleteConfirm" style="width:auto;" /> أؤكد أنني أريد حذف هذا الملف نهائياً من المستودع</label>
+    <button class="btn" style="background:#dc3545; color:#fff;" onclick="deleteGithubFile()">حذف الملف</button>
+    <div id="githubDeleteResult" style="margin-top:12px;"></div>
+  </div>
+</div>
+
+<!-- إدارة المسؤولين -->
+<div id="adminsPage" class="page hidden">
+  <div class="page-header"><h2>👨‍💼 إدارة المسؤولين</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="adminsAlert"></div>
+  <div class="form-row" style="margin-bottom:20px; border:2px solid var(--primary); border-radius:12px; padding:15px; background:var(--table-header);">
+    <div class="form-group" style="margin-bottom:0;">
+      <label>رقم واتساب المسؤول لاستلام طلبات الانضمام</label>
+      <input type="text" id="adminWhatsInput" placeholder="201554542019" oninput="this.value=this.value.replace(/[^\d+]/g,'')">
+      <small style="color:var(--text-light)">يُستخدم لإرسال طلبات الحسابات الجديدة على واتساب (بصيغة الدولة، مثال: 201554542019)</small>
+    </div>
+    <div class="form-group" style="display:flex; align-items:flex-end; margin-bottom:0;">
+      <button class="btn btn-primary" onclick="saveAdminWhatsapp()">💾 حفظ الرقم</button>
+    </div>
+  </div>
+  <div class="alert alert-info" style="margin-bottom:20px;">تفعيل Google مركزي ومتاح لجميع الأجهزة عبر إعداد GOOGLE_CLIENT_ID في بيئة Vercel.</div>
+
+  <div class="form-row" style="margin-bottom:20px;">
+    <div class="form-group"><label>رقم الموبايل</label><input type="text" id="newAdminMobile" placeholder="رقم الموبايل (11 رقم)" maxlength="11" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+    <div class="form-group"><label>الرقم السري</label><input type="password" id="newAdminPass" placeholder="الرقم السري"></div>
+    <div class="form-group"><label>نوع المسؤول</label>
+      <select id="newAdminType">
+        <option value="sub">فرعي</option>
+        <option value="main">رئيسي</option>
+      </select>
+    </div>
+    <div class="form-group" style="display:flex; align-items:flex-end;">
+      <button class="btn btn-success" onclick="addAdmin()">➕ إضافة مسؤول</button>
+    </div>
+  </div>
+  <div id="adminsTable"></div>
+</div>
+
+<!-- إعدادت المسؤول -->
+<div id="adminSettings" class="page hidden" style="max-width:600px;">
+  <div class="page-header"><h2>⚙️ إعدادات المسؤول</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="adminSettingsAlert"></div>
+  <h4 style="color:var(--primary); margin:20px 0 15px; border-bottom:2px solid var(--border); padding-bottom:10px;">🔐 تأكيد الهوية</h4>
+  <div class="form-group">
+    <label>رقم الموبايل الحالي (للتأكيد)</label>
+    <div style="position:relative;">
+      <input type="password" id="confirmMobile" placeholder="أدخل رقم الموبايل الحالي للتأئيد" maxlength="11" oninput="this.value=this.value.replace(/\D/g,'')" style="padding-left:45px;">
+      <span onclick="togglePassVisibility('confirmMobile', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>الرقم السري الءءالي (للتأكيد)</label>
+    <div style="position:relative;">
+      <input type="password" id="confirmPass" placeholder="أدخل الرقم السري الحالي للتأكيد" style="padding-left:45px;">
+      <span onclick="togglePassVisibility('confirmPass', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span>
+    </div>
+  </div>
+  <h4 style="color:var(--success); margin:25px 0 15px; border-bottom:2px solid var(--border); padding-bottom:10px;">✏️ البيانات الجديدة</h4>
+  <div class="form-group">
+    <label>رقم الموبا��ل الجديد</label>
+    <div style="position:relative;">
+      <input type="password" id="newMobile" placeholder="أدخل الرقم الجديد" maxlength="11" oninput="this.value=this.value.replace(/\D/g,'')" style="padding-left:45px;">
+      <span onclick="togglePassVisibility('newMobile', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>الرقم السري الجديد</label>
+    <div style="position:relative;">
+      <input type="password" id="newPass" placeholder="أدخل الرقم السري الجديد" style="padding-left:45px;">
+      <span onclick="togglePassVisibility('newPass', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span>
+    </div>
+  </div>
+  <button class="btn btn-success" onclick="saveAdminSettings()">💾 حفظ التغييرات</button>
+</div>
+
+<!-- إضافة طالب -->
+<div id="addStudent" class="page hidden">
+  <div class="page-header"><h2>➕ إضافة طالب جديد</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="addStudentAlert"></div>
+  <div class="form-group" style="border:2px solid var(--primary);padding:16px;border-radius:12px;background:var(--table-header);">
+    <label style="font-size:1.05rem;">الإملاء الصوتي لبيانات الطالب</label>
+    <p style="color:var(--text-light);margin:6px 0 12px;">اذكر البي��نات في جملة واحدة، مثال: اسم الطالب أحمد، اسم المستخدم ahmed، الرقم اءءقومي...، الهاتف...، تاريخ الميلاد...، ولي الأمر...، المواد القرآن والعربي، الجزء الأول، سورة البقرة. ستُملأ الخانات للمراجعة ولن يتم الحفظ تلقائياً.</p>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <button type="button" id="studentSpeechBtn" class="btn btn-outline" onclick="toggleStudentSpeech()" aria-pressed="false" aria-describedby="studentSpeechStatus">🎤 إدخال البيانات بالصوت</button>
+      <span id="studentSpeechStatus" aria-live="polite">جاهز</span>
+    </div>
+    <div id="studentSpeechTranscript" class="hidden" aria-live="polite" style="margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:8px;white-space:pre-wrap;"></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;">
+      <button type="button" id="studentIntakeRecordBtn" class="btn btn-primary" onclick="toggleStudentIntakeRecord()">بدء التسجيل</button>
+      <button type="button" id="studentIntakePauseBtn" class="btn btn-secondary" onclick="toggleAudioPause('student-intake')" disabled>إيقاءء مؤقت</button>
+      <span id="studentIntakeStatus" aria-live="polite">جاهز للتسجيل</span>
+      <span id="studentIntakeTimer" style="font-variant-numeric:tabular-nums;">00:00</span>
+    </div>
+    <audio id="studentIntakePreview" controls style="display:none;height:40px;margin-top:10px;width:100%;"></audio>
+    <div id="studentIntakeResult" aria-live="polite" style="margin-top:10px;"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>اسم الطالب *</label><input type="text" id="stName"></div>
+    <div class="form-group"><label>اسم المستخدم *</label><input type="text" id="stUsername" placeholder="اسم المستخدم لتسجيل الدخول"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم القومي * (14 رقم)</label><input type="text" id="stNational" maxlength="14" placeholder="أدخل 14 رقم" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+    <div class="form-group"><label>رقم الهاتف (11 رقم)</label><input type="text" id="stPhone" maxlength="11" placeholder="أدخل 11 رقم" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>تاريخ الميلاد *</label><input type="date" id="stBirth" onchange="calcAge()"></div>
+    <div class="form-group"><label>السن (يحسب تلقائياً)</label><input type="number" id="stAge" readonly style="background:var(--table-header)"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم السري للطالب *</label><input type="password" id="stStudentPass" placeholder="رقم سري لتسجيل دخول الطالب"><label style="font-weight:normal; margin-top:6px; display:block;"><input type="checkbox" id="stSamePass" onchange="syncStudentPass('st')"> استخدام نفس الرقم السري لولي الأمر</label></div>
+    <div class="form-group"><label>اسم ولي الأمر *</label><input type="text" id="stParent"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم السري لولي الأمر *</label><input type="password" id="stParentPass" placeholder="رقم سري خاص بولي الأمر" oninput="syncStudentPass('st')"></div>
+    <div class="form-group"><label>المواد الدراسية *</label><select id="stSubject" multiple class="subjects-select" onchange="toggleQuranFields()"></select><small style="color:var(--text-light)">اضغط Ctrl لاختيار أكثر من مادة</small></div>
+  </div>
+  <div id="quranFields" class="quran-section hidden">
+    <h4>📖 بيانات حفظ القرآن الكريم</h4>
+    <div class="form-row">
+      <div class="form-group"><label>الجزء</label><select id="stJuz" onchange="updateSurahSelect()"><option value="">اختر الجزء...</option></select></div>
+      <div class="form-group"><label>السورة</label><select id="stSurah"><option value="">اختر الجزء أولاً...</option></select></div>
+    </div>
+    <small id="juzBoundaryHint" style="display:block;color:var(--text-light);margin-top:6px">سيظهر هنا نطاق الآيات الحقيقي للجزء.</small>
+    <div class="form-group">
+      <label>البصمة الصوتية للطالب (اختياري — تسجيل صوتي للتحقق من الهوية - 20 ثانية)</label>
+      <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+        <button id="voiceRecordBtn" class="voice-record-btn" onclick="toggleVoiceRecord()">🎙️</button>
+        <span id="voiceRecordStatus">اضغط للتسجيل (20 ثانية)</span>
+        <audio id="voicePreview" controls style="display:none; height:40px;"></audio>
+      </div>
+      <small style="color:var(--text-light)">اختياري: يمكن حفظ بيانات الطالب بدون تسجيل البصمة الصوتية، ومكن إضافتها لاحقاً من تءءديل الطالب. عند وجودها تُستخدم للتحق من هوية الطالب.</small>
+    </div>
+  </div>
+  <div class="form-group"><label>ملاحظات إضافية</label><textarea id="stNotes" rows="2" placeholder="أي ملاحظات إضافية..."></textarea></div>
+  <button class="btn btn-primary" onclick="saveStudent()">💾 حفظ الطالب</button>
+</div>
+
+<!-- تعديل بيانات الطالب -->
+<div id="editStudent" class="page hidden">
+  <div class="page-header"><h2>✏️ تعديل بيانات الطالب</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="editStudentAlert"></div>
+  <input type="hidden" id="editId">
+  <div class="form-row">
+    <div class="form-group"><label>اسم الطالب</label><input type="text" id="editName"></div>
+    <div class="form-group"><label>اسم المستخدم</label><input type="text" id="editUsername"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم القومي (14 رقم)</label><input type="text" id="editNational" maxlength="14" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+    <div class="form-group"><label>رقم ال��اتف (11 رقم)</label><input type="text" id="editPhone" maxlength="11" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>تاريخ الميلاد</label><input type="date" id="editBirth" onchange="calcEditAge()"></div>
+    <div class="form-group"><label>السن</label><input type="number" id="editAge" readonly style="background:var(--table-header)"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم السري للطالب</label><div style="position:relative;"><input type="password" id="editStudentPass" style="padding-left:45px;"><span onclick="togglePassVisibility('editStudentPass', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span></div><label style="font-weight:normal; margin-top:6px; display:block;"><input type="checkbox" id="editSamePass" onchange="syncStudentPass('edit')"> نفس الرقم السري لولي الأمر</label></div>
+    <div class="form-group"><label>اسم ولي الأمر</label><input type="text" id="editParent"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label>الرقم السري لولي الأمر</label><div style="position:relative;"><input type="password" id="editParentPass" style="padding-left:45px;" oninput="syncStudentPass('edit')"><span onclick="togglePassVisibility('editParentPass', this)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.2rem; user-select:none;">👁️</span></div></div>
+    <div class="form-group"><label>المواد الدراسية</label><select id="editSubject" multiple class="subjects-select" onchange="toggleEditQuran()"></select></div>
+  </div>
+  <div id="editQuranFields" class="quran-section hidden">
+    <h4>📖 بيانات حفظ القرآن الكريم</h4>
+    <div class="form-row">
+      <div class="form-group"><label>الجزء</label><select id="editJuz" onchange="updateEditSurahSelect()"><option value="">اختر الجزء...</option></select></div>
+      <div class="form-group"><label>السورة</label><select id="editSurah"><option value="">اختر الجزء أولاً...</option></select></div>
+    </div>
+  </div>
+  <div class="form-group" style="border:1px dashed var(--primary);padding:12px;border-radius:10px;">
+    <label>🎙️ البصمة الصوتية</label>
+    <div id="editVoiceStatus" style="margin:6px 0;color:var(--text-light)">يمءءن استبدال البصمة الصوتية الحالية بتسجيل جديد.</div>
+    <button type="button" class="voice-record-btn" id="editVoiceBtn" onclick="toggleEditVoiceRecord()">🎙️</button>
+    <audio id="editVoicePreview" controls style="display:none;height:40px;margin-top:8px"></audio>
+  </div>
+  <div class="form-group"><label>ملاحظات</label><textarea id="editNotes" rows="2"></textarea></div>
+  <button class="btn btn-success" onclick="updateStudent()">💾 حفظ التعديلات</button>
+</div>
+
+<!-- تسجيل تسميع جديد -->
+<div id="recordSession" class="page hidden">
+  <div class="page-header"><h2>🎙️ تسجيل تسميع جديد</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="recordAlert"></div>
+  <input type="hidden" id="recordStudentId">
+  <div class="form-group"><label>اسم الطالب</label><input type="text" id="recordName" readonly style="background:var(--table-header)"></div>
+  <div class="form-row">
+    <div class="form-group"><label>تاريخ التسميع</label><input type="date" id="recordDate"><small style="color:var(--text-light)">يُحدد تلقائياً بتاريخ اليوم — يمكنك تغييره يدوياً</small></div>
+    <div class="form-group"><label>الجزء</label><input type="text" id="recordJuz" readonly style="background:var(--table-header)"></div>
+    <div class="form-group"><label>السورة الأساسية</label><input type="text" id="recordSurahName" readonly style="background:var(--table-header)"></div>
+  </div>
+  <div class="page" style="margin:15px 0;border:2px solid var(--primary);padding:14px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><strong>إعدادات فحص الغش الموحدة لجميع عناصر التسميع والاختبار والواجب</strong><button class="btn btn-secondary btn-sm" type="button" onclick="toggleGlobalProctorSettings()">إخفاء الإعدادات</button></div>
+  <p style="color:var(--text-light);line-height:1.8;margin:10px 0">يبدأ الفحص تلقائياً عند بدء العنصر. يعتمد على إشارات تفسيرية فقط: وجود وجه واحد، ظهور العينين، اتجاه النظر، بقاء الوجه أمام الشاشة، تركيز الصفحة، ووجود إصبع واحد. لا يتم حفظ أو إرسال فيديو خام، ولا تُتخذ نتيجة من إشارة واحدة منفردة.</p>
+  <div id="globalProctorSettings" style="margin-top:12px;"><div class="form-row"><div class="form-group"><label><input id="globalProctorEnabled" type="checkbox" checked> تفعيل الكاميرا وفحص الإشارات</label></div><div class="form-group"><label><input id="globalFocusEnabled" type="checkbox" checked> فحص التركيز ومغادرة الصفحة</label></div><div class="form-group"><label><input id="globalTouchEnabled" type="checkbox" checked> التحقق من إصبع واحد</label></div></div><div class="form-row"><div class="form-group"><label>مهلة ابتعاد العين/الوجه (ثانية)</label><input id="globalGazeGrace" type="number" min="3" max="120" value="12"></div><div class="form-group"><label>مهلة ترك الشاشة أو الخروج (ثانية)</label><input id="globalLeaveGrace" type="number" min="1" max="60" value="5"></div><div class="form-group"><label>عدد الإشارات قبل الحجب</label><input id="globalMaxViolations" type="number" min="1" max="10" value="2"></div></div><div class="form-row"><div class="form-group"><label><input id="globalFullscreen" type="checkbox"> طلب ملء الشاشة</label></div><div class="form-group"><label><input id="globalAutoRestore" type="checkbox" checked> استعادة تلقائية بعد عودة الوضع الطبيعي</label></div></div><button class="btn btn-primary" type="button" onclick="applyGlobalProctorSettings()">تطبيق على جميع العناصر</button></div>
+  </div>
+  <div id="recordElementsContainer"></div>
+  <div class="page" style="margin:15px 0;border:2px dashed var(--info);">
+    <h4 style="color:var(--info)">🖼️ تعديل اللوح/الصورة يدوياً</h4>
+    <p style="color:var(--text-light)">الاختيار التلقائي للسورة والآيات يظل كما هو، ويمكن للمسؤول تعديل اللوح والصورة يدوياً دون تعطيل الاختيار التلقائي.</p>
+    <div class="form-row">
+      <div class="form-group"><label>نص اللوح/التعديل اليدوي</label><textarea id="manualBoardText" rows="3" placeholder="اكتب التعديل المطلوب..."></textarea></div>
+      <div class="form-group"><label>رابط صورة اللوح (اختياري)</label><input id="manualBoardImage" type="url" placeholder="https://..."></div>
+    </div>
+    <button class="btn btn-info" onclick="saveManualBoardEdit()">💾 حفظ التعديل اليدوي</button>
+  </div>
+  <div class="exam-builder-section" id="examBuilderSection" style="background:linear-gradient(135deg, rgba(102,126,234,.08), rgba(23,162,184,.08)); border:2px solid var(--primary); border-radius:15px; padding:20px; margin:15px 0;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+      <h4 style="color:var(--primary);margin:0">🧪 اختبار مستقل بعد السورة الأساسية</h4>
+      <span class="badge badge-primary">لا يختلط بعناصر التسميع</span>
+    </div>
+<p style="color:var(--text-light);margin:10px 0">اختبار قرآني مستقل. اختبر نطاق السوءء والنوع والمستوى والوقت وعدد الآيات، وسيتولى النظام تنويع الأسئلة تلقائيًا.</p>
+    <div class="form-row">
+<div class="form-group"><label for="examBaseSurah">آخر سورة محفوظة للطالب</label><select id="examBaseSurah" onchange="syncExamSurahRange()"></select><small style="color:var(--text-light)">يُبنى الماضي من السور التي تسبقها في المراجعة حتى سورة الناس.</small></div>
+ <div class="form-group"><label for="examPastScope">نوع الماضي</label><select id="examPastScope" onchange="syncExamSurahRange()"><option value="both">الماضي القريب والبعيد</option><option value="near">الماضي القريب</option><option value="far">الماضي البعيد</option></select><small id="examPastScopeHelp" style="color:var(--text-light)">يُقسم الماضي إلى نصف قريب ونصف بعيد.</small></div>
+ <div class="form-group"><label for="examLastSurah">نهاية الماضي (اختياري)</label><select id="examLastSurah" onchange="syncExamSurahRange()"><option value="">سورة الناس تلقائياً</option></select><small style="color:var(--text-light)">يمكن تضييق نطاق الماضي يدوياً قبل ءءقسيمه.</small></div>
+ <div class="form-group"><label for="examDeadline">موعد انتهاء الإتاحة</label><input id="examDeadline" type="datetime-local"></div>
+ <div class="form-group"><label for="examSourceMode">المرجع الأساسي</label><select id="examSourceMode" onchange="updateExamSourceDistribution()"><option value="ai">الذكاء الاصطناعي</option><option value="file">من الملفات</option></select><small id="examSourceDistribution" style="color:var(--text-light)">توليد ذكي مع التحقق من النص القرآني والمراجع الموثوقة.</small></div>
+ <div class="form-group" id="examFileSourceGroup" style="display:none"><label for="examFileSource">ملف المرجع</label><select id="examFileSource"><option value="">اختر مرجعاً...</option></select><small style="color:var(--text-light)">يجب اختيار ملف عند استخدام «من الملفات».</small></div>
+ </div>
+ <div class="alert alert-info"><strong>مصدر حصري وواضح:</strong> اختر الذكاء الاصطناعي لأسئلة قرآنية صعبة ومتنوعة، أو اختر ملفاً واحداً ليكون مصدر الدفعة كاملة. كل ضغطة توليد تضيف أسئلة جديدة ولا تمسح السابقة.</div>
+    <div id="examPlanRows"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+      <button class="btn btn-info" onclick="addExamPlanRow()">➕ مستوى/نوع جديد</button>
+      <button class="btn btn-primary" onclick="generateExamQuestions()">🤖 توليد الأسئلة تلقائياً</button>
+      <button class="btn btn-success" onclick="addManualExamQuestion()">✍️ إضافة سؤال يدوي</button>
+      <button class="btn btn-secondary" onclick="clearExamQuestions()">🗑ءءء مسح ااختبار</button>
+    </div>
+    <div id="examQuestionsEditor"></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:15px">
+      <span id="examCountBadge" class="score-badge">0 سؤال</span>
+      <button class="btn btn-warning" onclick="saveExamDraft()">💾 حفظ الاختبار للطالب (مؤقت)</button>
+      <button class="btn btn-danger" onclick="cancelExamDraft()">إلغاء الاختبار</button>
+    </div>
+    <div id="examBuilderAlert"></div>
+  </div>
+
+  <div class="homework-section">
+    <h4>📝 الواجب الإضافي <button class="add-item-btn" onclick="addHomeworkItem()">+</button></h4>
+    <div id="homeworkItems"></div>
+  </div>
+  <div class="homework-section" style="background:linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); border-color:var(--primary);">
+    <h4>🎙️ التسميع الإضافي <button class="add-item-btn" onclick="addExtraElement()">+</button></h4>
+    <div id="extraElements"></div>
+  </div>
+
+  <div class="reading-section">
+    <h4>📖 القراءة الإضافية <button class="add-item-btn" onclick="addReadingItem()">+</button></h4>
+    <div id="readingItems"></div>
+  </div>
+  <div class="form-group"><label>ملاحظات التسميع</label><textarea id="recordNotes" rows="2" placeholder="ملاحظات إضافية..."></textarea></div>
+  <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:20px;"><button class="btn btn-success" onclick="saveSession(false)" style="flex:1; min-width:200px;">💾 حفظ مؤقت (مسودة)</button><button class="btn btn-primary" onclick="saveSession(true)" style="flex:1; min-width:200px; background:linear-gradient(135deg, #764ba2, #667eea);">🔒 ءءفظ نهائي (لا يمكن التعديل)</button></div>
+</div>
+
+<!-- سجل الطالب -->
+<div id="studentHistory" class="page hidden">
+  <div class="page-header">
+    <h2>📋 سجل الطالب: التسميعات والاختبارات</h2>
+    <div>
+      <button class="btn btn-info" onclick="openFullChart()">📊 عرض المخطط الكامل</button>
+      <button class="btn btn-secondary" onclick="goBack()">رجوع</button>
+    </div>
+  </div>
+  <div id="historyContent"></div>
+</div>
+
+<!-- صفحة المخطط الكامل -->
+<div id="fullChartPage" class="chart-page hidden">
+  <div class="page-header">
+    <h2>📊 المخط�� الت��صيلي</h2>
+    <button class="btn btn-secondary" onclick="closeFullChart()">رجوع</button>
+  </div>
+  <div id="fullChartContainer" style="text-align:center;"></div>
+</div>
+
+<!-- قائمة الطلاب -->
+<div id="studentsList" class="page hidden">
+  <div class="page-header"><h2>👥 قائمة الطلاب المسجلين (<span id="studentsCount">0</span>)</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="search-box"><input type="text" id="searchStudent" placeholder="🔍 ابحث باسم الطالب أو اسم المستخدم أو الرقم القومي..." onkeyup="renderStudents()"></div>
+  <div id="studentsTable"></div>
+</div>
+
+<!-- الرسائل -->
+<div id="messagesPage" class="page hidden">
+  <div class="page-header"><h2>💬 الرسائل</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="msg-tabs">
+    <div class="msg-tab active" onclick="switchMsgTab('inbox', this)">📥 الرسائل الواردة</div>
+    <div class="msg-tab" onclick="switchMsgTab('compose', this)">✉️ التواصل</div>
+  </div>
+  <div id="msgInboxSection">
+    <div id="messagesList"></div>
+  </div>
+  <div id="msgComposeSection" class="hidden">
+    <div class="form-row">
+      <div class="form-group"><label>إرسال إلى</label><select id="composeTarget" onchange="updateComposePersons()"><option value="">اختر...</option><option value="student">طالب</option><option value="parent">ولي أمر</option></select></div>
+      <div class="form-group"><label>الشخص</label><select id="composePerson"><option value="">اختر أولاً نوع ��لمستلم</option></select></div>
+    </div>
+    <div class="form-group"><label>الرسالة</label><textarea id="composeText" rows="4" placeholder="اكتب رسالتك..."></textarea></div>
+    <div id="voiceBox_compose"></div>
+    <button class="btn btn-primary" onclick="sendComposeMessage()">📤 إرسال</button>
+  </div>
+</div>
+
+<!-- المواد والمعلمين -->
+<div id="subjectsPage" class="page hidden">
+  <div class="page-header"><h2>📚 المواد والمعلمين</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="form-row" style="margin-bottom:20px;">
+    <div class="form-group"><label>اسم امادة الجديدة</label><input type="text" id="newSubName"></div>
+    <div class="form-group"><label>اسم المدرس</label><input type="text" id="newSubTeacher"></div>
+    <div class="form-group"><label>رقم هاتف المدرس</label><input type="text" id="newSubPhone" maxlength="11" placeholder="11 رقم" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+  </div>
+  <button class="btn btn-primary" onclick="addSubject()">➕ إضافة مادة/معلم</button>
+  <div id="subjectsTable" style="margin-top:20px;"></div>
+</div>
+
+<!-- دءءول الطالب -->
+<div id="studentLogin" class="page hidden" style="max-width:500px; margin:40px auto;">
+  <div class="page-header"><h2>👨‍🎓 دخول الطالب</h2></div>
+  <div id="studentLoginAlert"></div>
+  <div class="form-group"><label>اسم المستخدم</label><input type="text" id="studentUsername" placeholder="أدخل اسم المستخدم"></div>
+  <div class="form-group"><label>الرقم السري</label><input type="password" id="studentPassInput" placeholder="أدخل الرقم السري"></div>
+  <button class="btn btn-primary" onclick="studentLogin()" style="width:100%">دخول</button>
+  <button class="btn btn-secondary" onclick="showPage('homePage')" style="width:100%; margin-top:10px">رجوع للرئيسية</button>
+</div>
+
+<!-- صفحة الطالب -->
+<div id="studentDashboard" class="page hidden">
+  <div class="page-header">
+    <h2>👨‍🎓 صفحة الطالب</h2>
+  <div>
+  <button class="btn btn-outline" onclick="logout()">خروج</button>
+  </div>
+  </div>
+  <button type="button" class="side-fab" onclick="openRoleSidebar('student')" aria-label="فتح قائمة الأدوات" aria-controls="sidebar-student" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div id="sidebar-student" class="side-sidebar-wrap">
+    <div class="side-sidebar-overlay" onclick="closeRoleSidebar('student')"></div>
+    <aside class="side-sidebar" aria-label="أدوات الطالب">
+      <div class="side-sidebar-head">
+        <h3>الأدوات</h3>
+        <button type="button" class="side-sidebar-close" onclick="closeRoleSidebar('student')" aria-label="إغلاق القائمة">×</button>
+      </div>
+      <div class="side-sidebar-body">
+        <button type="button" class="role-nav-item" onclick="showPage('studentInbox')"><span class="role-nav-icon" aria-hidden="true">💬</span><span>الرسائل</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('studentFilesPage')"><span class="role-nav-icon" aria-hidden="true">📁</span><span>الملفات</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('studentAIChat')"><span class="role-nav-icon" aria-hidden="true">✦</span><span>مساعد الذكاء الاصطناعي</span></button>
+        <button type="button" class="role-nav-item" onclick="showStudentFullChart()"><span class="role-nav-icon" aria-hidden="true">📈</span><span>مخطط التقييم</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('studentRecordsPage')"><span class="role-nav-icon" aria-hidden="true">🎙️</span><span>صندوق التسجيلات</span></button>
+      </div>
+    </aside>
+  </div>
+  <div id="studentWelcome"></div>
+  <div id="studentDailyHub"></div>
+  <div id="studentInfo"></div>
+  <div id="studentDraftSection"></div>
+  <div id="studentTasksSection"></div>
+  <div id="studentSessionsSection"></div>
+  <div id="studentChartSection"></div>
+  <div id="studentCompletedTasksSection"></div>
+</div>
+
+<!-- المصحف الكامل -->
+<div id="quranReaderPage" class="page hidden quran-reader-page">
+  <div class="page-header"><h2>📖 المصحف الشريف</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="quranReaderContent"></div>
+</div>
+
+<!-- مركز الأدعية والأذكار والأحاديث -->
+<div id="islamicContentPage" class="page hidden">
+  <div class="page-header"><h2 id="islamicContentTitle">مركز المحتوى الإسلامي</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="islamicContentList"></div>
+</div>
+
+<!-- القبلة -->
+<div id="qiblaPage" class="page hidden">
+  <div class="page-header"><h2>🕋 اتجاه القبلة</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="qiblaContent"></div>
+</div>
+
+<!-- صندوق التسجيلات للطالب -->
+<div id="studentExamPage" class="page hidden">
+  <div class="page-header"><h2>🧪 الاختبار الحالي</h2><button class="btn btn-secondary" onclick="goBack()">رجءءع</button></div>
+  <div id="studentExamContent"></div>
+</div>
+
+<div id="studentRecordsPage" class="page hidden">
+  <div class="page-header"><h2>📦 صنوق التسجيلات</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="studentRecordsContent"></div>
+</div>
+
+<!-- ملفات المسؤول للطالب -->
+<div id="studentFilesPage" class="page hidden">
+  <div class="page-header"><h2>📁 الملفات المرسلة لي</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="studentFilesContent"></div>
+</div>
+
+<!-- صندوق رسائل الطالب -->
+<div id="studentInbox" class="page hidden">
+  <div class="page-header"><h2>📬 صندوق الرسائل</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="page" style="margin-top:0;">
+    <h4 style="color:var(--primary); margin-bottom:10px;">✉️ مراسلة المسؤول (نص أو رسالة صوتية)</h4>
+    <div class="form-group"><textarea id="studentMsgText" rows="3" placeholder="اكتب رسالتك للمسؤول..."></textarea></div>
+    <div id="voiceBox_student"></div>
+    <button class="btn btn-primary" onclick="sendUserMessageToAdmin('student')">📤 إرسال</button>
+  </div>
+  <div id="studentInboxList"></div>
+</div>
+
+<!-- دردشة AI للطاب -->
+<div id="studentAIChat" class="page hidden">
+  <div class="page-header"><h2>🤖 مساعدك الذكي في القرآن</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="ai-chat">
+    <div id="studentChatMessages" class="ai-chat-messages"></div>
+    <div class="ai-input">
+<span class="badge badge-primary">Gemini / Groq</span>
+      <input type="text" id="studentChatInput" placeholder="اسألني عن مستواك أو عن القرآن..." onkeypress="if(event.key==='Enter' && !event.isComposing && event.keyCode!==229)sendStudentChat()">
+      <button class="btn btn-primary" onclick="sendStudentChat()">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- إعدادات الطالب -->
+<div id="studentSettings" class="page hidden" style="max-width:500px;">
+  <div class="page-header"><h2>⚙️ تغيير الرقم السري</h2></div>
+  <div id="studentSettingsAlert"></div>
+  <div class="form-group"><label>الرقم السري الحالي</label><input type="password" id="currentStudentPass" placeholder="أدخل الرقم السري الحالي"></div>
+  <div class="form-group"><label>الرقم السي الجديد</label><input type="password" id="newStudentPass" placeholder="أدخل الرقم السري لجديد"></div>
+  <button class="btn btn-success" onclick="saveStudentPass()">💾 حفظ</button>
+  <button class="btn btn-secondary" onclick="goBack()">رجوع</button>
+</div>
+
+<!-- دخول ولي الأمر -->
+<div id="parentLogin" class="page hidden" style="max-width:500px; margin:40px auto;">
+  <div class="page-header"><h2>👨‍👩‍👧 دخول ولي الأمر</h2></div>
+  <div id="parentLoginAlert"></div>
+  <div class="form-group"><label>اسم ولي الأمر</label><input type="text" id="parentName" placeholder="أدخل اسمك كما سجله المسؤول"></div>
+  <div class="form-group"><label>الرقم السري</label><input type="password" id="parentPass" placeholder="الرقم السري الخاص بك"></div>
+  <button class="btn btn-primary" onclick="parentLogin()" style="width:100%">دخول</button>
+  <button class="btn btn-secondary" onclick="showPage('homePage')" style="width:100%; margin-top:10px">رجوع للرئيسية</button>
+</div>
+
+<!-- صفحة ولي الأمر -->
+<div id="parentDashboard" class="page hidden">
+  <div class="page-header">
+    <h2>👨‍👩‍👧 متابعة الأبناء</h2>
+  <div>
+  <button class="btn btn-outline" onclick="logout()">خروج</button>
+  </div>
+  </div>
+  <button type="button" class="side-fab" onclick="openRoleSidebar('parent')" aria-label="فتح قائمة الأدوات" aria-controls="sidebar-parent" aria-expanded="false"><span></span><span></span><span></span></button>
+  <div id="sidebar-parent" class="side-sidebar-wrap">
+    <div class="side-sidebar-overlay" onclick="closeRoleSidebar('parent')"></div>
+    <aside class="side-sidebar" aria-label="أدوات ولي الأمر">
+      <div class="side-sidebar-head">
+        <h3>الأدوات</h3>
+        <button type="button" class="side-sidebar-close" onclick="closeRoleSidebar('parent')" aria-label="إغلاق القائمة">×</button>
+      </div>
+      <div class="side-sidebar-body">
+        <button type="button" class="role-nav-item" onclick="showPage('parentInbox')"><span class="role-nav-icon" aria-hidden="true">💬</span><span>الرسائل</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('parentFilesPage')"><span class="role-nav-icon" aria-hidden="true">📁</span><span>الملفات</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('parentAIChat')"><span class="role-nav-icon" aria-hidden="true">✦</span><span>مساعد الذكاء الاصطناعي</span></button>
+        <button type="button" class="role-nav-item" onclick="showPage('parentChartPage')"><span class="role-nav-icon" aria-hidden="true">📈</span><span>المخطط</span></button>
+      </div>
+    </aside>
+  </div>
+  <div id="parentWelcome"></div>
+  <div id="parentDailyHub"></div>
+  <div id="parentInfo"></div>
+</div>
+
+<!-- ملفات المسؤول لولي الأمر -->
+<div id="parentFilesPage" class="page hidden">
+  <div class="page-header"><h2>الملفات المرسلة</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="parentFilesContent"></div>
+</div>
+
+<!-- صندوق رسائل ولي الأمر -->
+<div id="parentInbox" class="page hidden">
+  <div class="page-header"><h2>📬 صندوق الرسائل</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="page" style="margin-top:0;">
+    <h4 style="color:var(--primary); margin-bottom:10px;">✉️ مراسلة المسؤول (نص أو رسالة صوتية)</h4>
+    <div class="form-group"><textarea id="parentMsgText" rows="3" placeholder="اكتب رسالتك للمسؤول..."></textarea></div>
+    <div id="voiceBox_parent"></div>
+    <button class="btn btn-primary" onclick="sendUserMessageToAdmin('parent')">📤 إرسال</button>
+  </div>
+  <div id="parentInboxList"></div>
+</div>
+
+<!-- دردشة AI لولي الأمر -->
+<div id="parentAIChat" class="page hidden">
+  <div class="page-header"><h2>🤖 مساعدك الذكي في متابعة ابنك</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div class="ai-chat">
+    <div id="parentChatMessages" class="ai-chat-messages"></div>
+    <div class="ai-input">
+<span class="badge badge-primary">Gemini / Groq</span>
+      <input type="text" id="parentChatInput" placeholder="اسألنئ ن مستوى ابنك، أو عن القرآن..." onkeypress="if(event.key==='Enter' && !event.isComposing && event.keyCode!==229)sendParentChat()">
+      <button class="btn btn-primary" onclick="sendParentChat()">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- صفحة سجلات الطال لولي الأمر -->
+<div id="parentRecordsPage" class="page hidden">
+  <div class="page-header">
+    <h2>📋 سجلات التسميعات النهائية</h2>
+    <button class="btn btn-secondary" onclick="goBack()">رجوع</button>
+  </div>
+  <div id="parentRecordsContent"></div>
+</div>
+
+<!-- صفحة المهام قيد الانتظار لولي الأمر -->
+<div id="parentPendingTasksPage" class="page hidden">
+  <div class="page-header">
+    <h2>⏳ المهام اليومية</h2>
+    <button class="btn btn-secondary" onclick="goBack()">رجوع</button>
+  </div>
+  <div id="parentPendingTasksContent"></div>
+</div>
+
+<!-- صفحة الملفات المرفوعة -->
+<div id="filesPage" class="page hidden">
+  <div class="page-header"><h2>📁 الملفات المرفوعة</h2><button class="btn btn-secondary" onclick="goBack()">رجوع</button></div>
+  <div id="filesAlert"></div>
+  <section style="background:var(--table-header);border:2px solid var(--primary);border-radius:15px;padding:20px;margin-bottom:20px;">
+    <h3 style="color:var(--primary);margin-bottom:8px;">ملفات إنشاء الاختبارات</h3>
+    <p style="color:var(--text-light);margin-bottom:15px;">ارفع PDF أو Word أو TXT. تُحفظ الملفات بشكل خاص حتى يحذفها المسؤول، ويُستخدم نصها محلياً دون إرساله إلى Gemini وGroq.</p>
+    <input id="examFileUpload" type="file" accept=".pdf,.docx,.txt" onchange="uploadExamFile(this)">
+    <div id="examFileUploadStatus" style="margin-top:10px;"></div>
+    <div id="examFilesList" style="margin-top:15px;"></div>
+  </section>
+  <div style="background:linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); border-radius:15px; padding:20px; margin-bottom:20px; border:2px solid var(--primary);">
+    <h4 style="color:var(--primary); margin-bottom:15px;">⬆️ رفع ملف جديد</h4>
+    <div class="form-row">
+      <div class="form-group" style="flex:2;"><label>اسم الملف / الوصف</label><input type="text" id="fileDesc" placeholder="وصف الملف..."></div>
+      <div class="form-group" style="flex:1;"><label>الفئة (المُرسَل إليه)</label>
+        <select id="fileCategory" onchange="renderFileTargetSelect()">
+          <option value="student">👨‍🎓 الطالب</option>
+          <option value="parent">👨‍👩‍👧 ولي الأمر</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:1;"><label>تحديد المستلم</label>
+        <select id="fileTarget"><option value="all">الجميع</option></select>
+      </div>
+    </div>
+    <div class="file-upload" onclick="document.getElementById('fileInput').click()" style="padding:30px;">
+      <div style="font-size:3rem; margin-bottom:10px;">📎</div>
+      <div style="font-size:1.1rem; font-weight:600;">اضغط هنا لاختيار ملف أو اسحب الملف هنا</div>
+      <div style="color:var(--text-light); margin-top:5px;">PDF, Word, Excel, Images, Audio, Video — أي نوع</div>
+    </div>
+    <input type="file" id="fileInput" style="display:none" onchange="uploadFile(this)">
+    <div id="fileUploadProgress" style="margin-top:15px;"></div>
+  </div>
+  <div id="filesList"></div>
+</div>
+
+<!-- صفحة المخطط لولي الأمر -->
+<div id="parentChartPage" class="chart-page hidden">
+  <div class="page-header">
+    <h2>📊 مخطط التقييم الكامل</h2>
+    <button class="btn btn-secondary" onclick="goBack()">رجوع</button>
+  </div>
+  <div id="parentChartContainer" style="text-align:center;"></div>
+</div>
+
+</div>
+
+<div id="proctorGate" class="proctor-gate hidden" role="dialog" aria-modal="true" aria-labelledby="proctorTitle">
+  <div class="proctor-panel">
+    <h2 id="proctorTitle">التحقق قبل بدء الجلسة</h2>
+    <p>لن تُحفظ صورة أو فيديو. يجري الفحص على جهازك، ويُرسل للمسؤول سبب المخالفة ووقتها فقط.</p>
+    <div class="proctor-camera"><video id="proctorVideo" autoplay playsinline muted></video><div id="proctorCameraStatus" class="proctor-camera-status">اضغط تشغيل الفحص للسماح بالكاميرا</div></div>
+    <canvas id="proctorCanvas" width="160" height="120" hidden></canvas>
+    <div class="proctor-checks" aria-live="polite">
+      <div id="proctorTouchCheck" class="proctor-check bad">شاشة لمس مطلوبة</div><div id="proctorLightCheck" class="proctor-check bad">الإضاءة غير مفحوصة</div>
+      <div id="proctorFaceCheck" class="proctor-check bad">الوجه غير مفحوص</div><div id="proctorGazeCheck" class="proctor-check bad">اتجاه النظر غير مفحوص</div>
+    </div>
+<p id="proctorHelp">ضع الهاتف أمامك وانظر إلى الشاشة. استخدم الموقع بشكل طبيعي بلمسة واحدة في كل مرة؛ لا يلزم إبقاء الإصبع مضغوطًا أثناء الاختبار.</p>
+<div id="proctorGateHold" class="proctor-touch-zone" aria-disabled="true">بعد نجاح الفحص: ضع إصبع واحد هنا للبدء</div>
+    <div class="proctor-actions"><button id="proctorScanBtn" type="button" class="btn btn-primary" onclick="startProctorScan()">تشغيل الفحص</button><button type="button" class="btn btn-secondary" onclick="closeProctorGate()">إلغاء</button></div>
+  </div>
+</div>
+  <div id="proctorWarning" class="proctor-warning hidden" role="alert" aria-live="assertive"></div>
+  <div id="proctorBlock" class="proctor-gate hidden" role="alertdialog" aria-modal="true" aria-labelledby="proctorBlockTitle"><div class="proctor-panel"><h2 id="proctorBlockTitle">تم إيقاف التحكم مؤقتاً</h2><p id="proctorBlockMessage">نحتاج إلى عودة الإشارات الطبيعية قبل استكمال المهمة. لا تُنهى المحاولة بسبب هذا التنبيه.</p><div class="proctor-checks"><div id="proctorBlockStatus" class="proctor-check bad">! جارٍ استعادة الفحص</div></div></div></div>
+<div id="studentWorkModal" class="student-work-modal hidden" role="dialog" aria-modal="true" aria-labelledby="studentWorkModalTitle" onclick="if(event.target===this)closeStudentWorkModal()">
+  <div class="student-work-dialog">
+    <div class="student-work-dialog-header"><h3 id="studentWorkModalTitle">المطلوب</h3><button type="button" class="btn btn-secondary" onclick="closeStudentWorkModal()" aria-label="إغلاق النافذة">إغلاق</button></div>
+    <div id="studentWorkModalBody" class="student-work-dialog-body"></div>
+  </div>
+</div>
+  
+  <script>
+function getSelectedAIModel(){return 'gemini-2.5-flash';}
+function getAIModelLabel(){return 'Gemini / Groq';}
+
+function showToast(msg, type){
+  if(!type){
+    var t = String(msg);
+    type = (/(❌||فشل|طأ|لا يمكن|يرجى|مسبق|غير|يجب|لم )/.test(t)) ? 'error' : 'success';
+  }
+  var box = document.getElementById('toastBox');
+  if(!box){ box = document.createElement('div'); box.id='toastBox'; document.body.appendChild(box); }
+  var el = document.createElement('div');
+  el.className = 'toast-item toast-' + type;
+  el.textContent = msg;
+  box.appendChild(el);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  setTimeout(function(){ el.classList.remove('show'); setTimeout(function(){ el.remove(); }, 300); }, 5000);
+}
+window.alert = function(m){ showToast(m); };
+</script>
+<script>
+(function(){
+  let corePromise = null;
+  window.loadThimarAppCore = function(){
+    if (window.__thimarAppCoreLoaded) return Promise.resolve();
+    if (corePromise) return corePromise;
+    corePromise = new Promise(function(resolve, reject){
+      const s = document.createElement('script');
+      s.src = '/app-core.js';
+      s.async = false;
+      s.onload = function(){ window.__thimarAppCoreLoaded = true; resolve(); };
+      s.onerror = function(){ corePromise = null; reject(new Error('تعذر تحميل ملفات النظام.')); };
+      document.head.appendChild(s);
+    });
+    return corePromise;
+  };
+
+})();
+</script>
+<script>
+/* واجهة الدخول تعمل فوراً، والنظام الكامل جاهز مسبقاً أو يُحمّل عند الحاجة. */
+(function(){
+  var wrappers = {};
+  function runWhenCoreReady(name, args, button){
+    if (button) button.disabled = true;
+    if (name === 'unifiedLogin') {
+      var box = document.getElementById('unifiedLoginAlert');
+      if (box) box.innerHTML = '<div class="alert alert-info">جارٍ تجهيز النظام...</div>';
+    }
+    return window.loadThimarAppCore().then(function(){
+      if (button) button.disabled = false;
+      var fn = window[name];
+      if (typeof fn !== 'function' || fn === wrappers[name]) throw new Error('الدالة المطلوبة غير متاحة');
+      return fn.apply(window, Array.prototype.slice.call(args || []));
+    }).catch(function(err){
+      if (button) button.disabled = false;
+      var message = '❌ تعذر تجهيز النظام. تحقق من الاتصال ثم أعد المحاولة.';
+      var box = document.getElementById('unifiedLoginAlert');
+      if (box) box.innerHTML = '<div class="alert alert-danger">' + message + '</div>';
+      console.error('App core failed to load', err);
+      if (typeof showToast === 'function') showToast(message, 'error');
+    });
+  }
+
+  ['unifiedLogin','startSignup'].forEach(function(name){
+    wrappers[name] = function(){
+      var btn = name === 'unifiedLogin' ? document.querySelector('#lockScreen .btn-primary') : null;
+      return runWhenCoreReady(name, arguments, btn);
+    };
+    window[name] = wrappers[name];
+  });
+
+  // هذه الوظائف تخص الواجهة فقط ولا تحتاج إلى انتظار تحميل النظام الكامل.
+  window.togglePassVisibility = function(id, icon){
+    var input = document.getElementById(id);
+    if (!input) return;
+    input.type = input.type === 'password' ? 'text' : 'password';
+    if (icon) icon.textContent = input.type === 'password' ? '👁️' : '🙈';
+  };
+
+  window.toggleTheme = function(){
+    var html = document.documentElement;
+    var btn = document.querySelector('.theme-toggle');
+    var dark = html.getAttribute('data-theme') === 'dark';
+    if (dark) { html.removeAttribute('data-theme'); localStorage.setItem('theme','light'); if(btn) btn.textContent='🌙'; }
+    else { html.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); if(btn) btn.textContent='☀️'; }
+  };
+
+  wrappers.toggleLang = function(){
+    var next = document.documentElement.lang === 'en' ? 'ar' : 'en';
+    localStorage.setItem('lang', next);
+    document.documentElement.lang = next;
+    document.documentElement.dir = next === 'en' ? 'ltr' : 'rtl';
+    var btn = document.getElementById('langToggleBtn');
+    if (btn) btn.textContent = next === 'en' ? 'ع' : 'EN';
+    window.loadThimarAppCore().catch(function(err){ console.error('App core failed to load', err); });
+  };
+  window.toggleLang = wrappers.toggleLang;
+})();
+</script>
+
+<!-- File View Modal -->
+<div id="fileViewModal" class="hidden" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:var(--card-bg); border-radius:20px; padding:20px; max-width:95%; max-height:95%; width:900px; overflow:auto; position:relative; box-shadow:0 25px 50px rgba(0,0,0,0.5);">
+    <button onclick="closeFileModal()" style="position:absolute; top:15px; left:15px; background:var(--danger); color:#fff; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.3rem; z-index:10;">×</button>
+    <div id="fileModalContent" style="margin-top:10px;"></div>
+    <div style="margin-top:20px; text-align:center;">
+      <a id="fileModalDownload" href="#" download class="btn btn-success" style="text-decoration:none;">⬇️ تحميل الملف على جهازي</a>
+      <button onclick="closeFileModal()" class="btn btn-secondary" style="margin-right:10px;">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* 🔔 صلاحيات الإشعرات والميكروفون عند أول تفاعل */
+(function(){
+  var asked = false;
+  function askPerms(){
+    if(asked) return; asked = true;
+    try { if(window.Notification && Notification.permission === 'default') Notification.requestPermission(); } catch(e) {}
+  }
+  document.addEventListener('click', askPerms, { once: true });
+  window.requestSitePermissions = async function(){
+    askPerms();
+    try { const st = await window.safeGetMic(); st.getTracks().forEach(t=>t.stop()); return true; } catch(e) { return false; }
+  };
+})();
+</script>
+<script>
+/* الشريط الجانبي المنزلق للأدوات الثانوية داخل لوحات المسؤول والطالب وولي الأمر */
+(function(){
+  function fabFor(role){
+    var btn = document.querySelector('.side-fab[aria-controls="sidebar-'+role+'"]');
+    return btn || null;
+  }
+  window.openRoleSidebar = function(role){
+    var wrap = document.getElementById('sidebar-'+role);
+    if(!wrap) return;
+    wrap.classList.add('open');
+    var fab = fabFor(role); if(fab) fab.setAttribute('aria-expanded','true');
+  };
+  window.closeRoleSidebar = function(role){
+    var wrap = document.getElementById('sidebar-'+role);
+    if(!wrap) return;
+    wrap.classList.remove('open');
+    var fab = fabFor(role); if(fab) fab.setAttribute('aria-expanded','false');
+  };
+  function closeAllSidebars(){
+    ['admin','student','parent'].forEach(function(r){ window.closeRoleSidebar(r); });
+  }
+  /* إغلاق الشريط تلقائياً عند اختيار أي أداة بداخله (بعد تنفيذ وظيفتها الأصلية) */
+  document.addEventListener('click', function(e){
+    var item = e.target.closest && e.target.closest('.side-sidebar-body .role-nav-item');
+    if(item){ setTimeout(closeAllSidebars, 0); }
+  });
+  /* إغلاق الشريط بمفتاح Esc */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeAllSidebars();
+  });
+})();
+</script>
+ </body>
+</html>
