@@ -1,29 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  serverExternalPackages: ["pdf-parse", "pdfjs-dist", "@napi-rs/canvas"],
   typescript: {
     ignoreBuildErrors: true,
   },
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'geolocation=(), camera=(), microphone=(self)',
-          },
-        ],
-      }
-    ]
+  images: {
+    unoptimized: true,
   },
-  env: {
-    GROQ_API_KEY: process.env.GROQ_API_KEY
-  }
+  async rewrites() {
+    return {
+      beforeFiles: [
+        // الجذر يعرض شاشة ترحيب خفيفة ومستقلة؛ التطبيق الكامل يُحمّل فقط بعد انتهاء التلاوة.
+        { source: '/', destination: '/index.html' },
+      ],
+    }
+  },
 }
 
 export default nextConfig
